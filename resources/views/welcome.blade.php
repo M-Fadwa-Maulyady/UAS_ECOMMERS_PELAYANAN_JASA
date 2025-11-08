@@ -8,11 +8,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-
+<h1>haloo</h1>
     <header class="top-header">
     <div class="container-top">
         <img src="jasa-barang2/img/logo.png" alt="Logo" class="logo">
-        
+
         <div class="header-right-info">
             <div class="contact-info">
                 <div class="phone">
@@ -22,7 +22,7 @@
                     <i class="fa fa-envelope"></i> infotransport@gmail.com
                 </div>
             </div>
-            
+
             <div class="logout-icon">
                 <a href="{{ route('login.post') }}"><i class="fas fa-sign-in-alt"></i></a>
             </div>
@@ -283,7 +283,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="company-guarantees">
                 <div class="guarantee-item">
                     <i class="fas fa-shield-alt"></i>
