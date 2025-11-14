@@ -1,28 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Gerak Cepat</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- Google Font: Source Sans Pro -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="{{ asset('tem/plugins/fontawesome-free/css/all.min.css') }}">
-  <!-- icheck bootstrap -->
-  <link rel="stylesheet" href="{{ asset('tem/plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
-  <!-- Theme style -->
-  <link rel="stylesheet" href="{{ asset('tem/dist/css/adminlte.min.css') }}">
+    <title>{{ $title ?? 'Gerak Cepat - Auth' }}</title>
+
+    {{-- AUTO LOAD CSS LOGIN / REGISTER --}}
+    @if(isset($page) && $page === 'register')
+        <link rel="stylesheet" href="{{ asset('ayam/register.css') }}">
+    @else
+        <link rel="stylesheet" href="{{ asset('ayam/login.css') }}">
+    @endif
+
+    <link rel="stylesheet" href="{{ asset('ayam/all.min.css') }}">
 </head>
-<body class="hold-transition login-page">
-{{ $slot }}
-<!-- /.login-box -->
 
-<!-- jQuery -->
-<script src="{{ asset('tem/plugins/jquery/jquery.min.js') }}"></script>
-<!-- Bootstrap 4 -->
-<script src="{{ asset('tem/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-<!-- AdminLTE App -->
-<script src="{{ asset('tem/dist/js/adminlte.min.js') }}"></script>
+<body>
+
+    <div class="auth-container">
+        {{ $slot }}
+    </div>
+
+    {{-- JS --}}
+    <script src="{{ asset('ayam/login.js') }}"></script>
+    <script src="{{ asset('ayam/register.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    {{-- TOAST --}}
+    @if (session('success') || session('error'))
+        <script>
+            const Toast = Swal.mixin({
+                toast: true,
+                position: "bottom-end",
+                iconColor: "white",
+                customClass: { popup: "colored-toast" },
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+            });
+
+            Toast.fire({
+                icon: "{{ session('success') ? 'success' : 'error' }}",
+                title: "{{ session('success') ?? session('error') }}",
+            });
+        </script>
+    @endif
+
 </body>
 </html>

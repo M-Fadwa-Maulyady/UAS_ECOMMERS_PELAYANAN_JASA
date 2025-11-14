@@ -70,7 +70,7 @@
                             <li><a href="#">Raw Meats</a></li>
                             <li><a href="#">Soft Drinks</a></li>
                             <li><a href="#">View All Categories</a></li>
-                            <li><a href="#">KONTOL DIMAS</a></li>
+                            <li><a href="#">KONTOL</a></li>
                         </ul>
                     </li>
                 <li><a href="#pricing-section">Pricing</a></li>

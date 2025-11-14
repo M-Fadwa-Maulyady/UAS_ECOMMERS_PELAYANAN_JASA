@@ -1,0 +1,285 @@
+:root {
+  /* Mint palette (match admin) */
+  --mint-50:#f3f7f4;
+  --mint-100:#e7f1ea;
+  --mint-200:#d5e7dc;
+  --mint-300:#bfe0cd;
+  --mint-400:#a3d3ba;
+  --mint-500:#80c4a2;
+  --mint-600:#5dad87;
+  --mint-700:#2a7e66;
+  --mint-800:#0d5c4a;
+
+  --bg:#f6f8f7;
+  --card:#ffffff;
+  --border:#e6e9ec;
+
+  --text:#0f172a;
+  --muted:#6b7280;
+
+  --blue:#4f7cff;
+  --pink:#f472b6;
+  --green:#22c55e;
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color: var(--text);
+  background: linear-gradient(180deg, #f9fbfa, #fff 30%) fixed;
+}
+
+/* === Layout === */
+.app {
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  grid-template-rows: auto 1fr;
+  gap: 18px;
+  padding: 18px;
+}
+
+/* === Sidebar === */
+.sidebar {
+  grid-row: 1 / span 2;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+}
+.brand { display: flex; align-items: center; gap: 12px; margin: 4px 2px 12px; }
+.brand .dot {
+  width: 40px; height: 40px; border-radius: 12px; background: var(--mint-600);
+  color: #053225; font-weight: 800; display: grid; place-items: center;
+}
+.brand .title { font-weight: 800; }
+.brand .role { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+.menu { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+.menu .item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; border-radius: 12px; border: 1px solid transparent;
+  color: #0f172a; text-decoration: none; cursor: pointer;
+}
+.menu .item i { width: 18px; color: #0d5c4a; }
+.menu .item:hover { background: var(--mint-50); }
+.menu .active { background: var(--mint-100); border-color: var(--mint-200); font-weight: 600; }
+
+.pro-card {
+  margin-top: auto;
+  display: flex; flex-direction: column; gap: 12px;
+  background: linear-gradient(180deg, var(--mint-700), var(--mint-800));
+  color: #eaf5f0; border-radius: 16px; padding: 16px;
+}
+.pro-card .badge {
+  width: 44px; height: 44px; border-radius: 14px; background: #a6f3d1;
+  color: #054133; font-weight: 800; display: grid; place-items: center;
+}
+.pro-card .t { font-weight: 700; }
+.pro-card .s { font-size: 12px; opacity: .9; }
+.btn-pro {
+  border: none; background: #a3f1cf; color: #063b2d;
+  font-weight: 700; border-radius: 12px; padding: 10px 12px; cursor: pointer;
+}
+
+/* === Topbar === */
+.topbar {
+  background: var(--mint-800);
+  color: #eaf5f0; border-radius: 18px;
+  padding: 12px 16px; display: flex; align-items: center; justify-content: space-between;
+}
+.search {
+  background: #0a4f3c; border-radius: 12px; border: 1px solid rgba(255,255,255,.16);
+  display: flex; align-items: center; gap: 10px; padding: 8px 12px; min-width: 380px;
+}
+.search input {
+  border: none; outline: none; background: transparent; color: #d9fff2; width: 100%;
+}
+.icon-btn {
+  background: transparent; border: 1px solid rgba(255,255,255,.25);
+  color: #eaf5f0; border-radius: 10px; padding: 8px 10px; cursor: pointer;
+}
+.top-actions { display: flex; align-items: center; gap: 10px; }
+.locale {
+  display: flex; align-items: center; gap: 8px;
+  background: #0a4f3c; border: 1px solid rgba(255,255,255,.16);
+  padding: 6px 10px; border-radius: 10px; color: #d6fff0;
+}
+.profile { display: flex; align-items: center; gap: 10px; padding-left: 8px; }
+.profile img { width: 38px; height: 38px; border-radius: 50%; border: 2px solid #a7f0d2; }
+.profile .muted { color: #c6ffea; font-size: 12px; }
+
+/* === Grid === */
+.main { overflow: auto; padding-right: 6px; }
+.grid {
+  display: grid;
+  gap: 10px;
+  margin-top: 10px;
+  grid-template-columns: 1.0fr 0.8fr;
+  grid-template-areas:
+    "stats stats"
+    "vacancy yearly"
+    "task1 task2"
+    "inprogress inprogress";
+  align-items: start;
+}
+
+/* === Cards === */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 14px 16px;
+  margin: 0; /* biar gak ada jarak antar card */
+}
+.card-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.card h3 { margin: 0; font-size: 16px; }
+.link { border: none; background: transparent; color: var(--mint-700); font-weight: 600; cursor: pointer; }
+
+/* === Vacancy Chart === */
+.vacancy {
+  grid-area: vacancy;
+  height: 260px;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+.vacancy canvas {
+  flex: 1;
+  max-height: 200px;
+}
+.vacancy .legend {
+  display: flex; gap: 14px; align-items: center;
+  font-size: 13px; color: var(--text);
+}
+.btn-mini {
+  background: var(--mint-100);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 4px 10px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+/* === Stats Row (atas) === */
+.stats-row {
+  grid-area: stats;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 0;
+}
+.stat .pill {
+  font-size: 12px;
+  color: #0d5c4a;
+  background: var(--mint-100);
+  border: 1px solid var(--mint-200);
+  padding: 6px 10px;
+  border-radius: 999px;
+  display: inline-block;
+}
+.stat .stat-val {
+  font-size: 28px;
+  font-weight: 800;
+  margin-top: 6px;
+}
+
+/* === In Progress === */
+.inprogress { grid-area: inprogress; margin: 0; }
+.progress-list { display: flex; flex-direction: column; gap: 10px; margin-top: 6px; }
+.progress-item { display: flex; align-items: center; gap: 10px; }
+.progress-label { font-weight: 600; }
+.progress {
+  height: 10px;
+  background: #eef2f6;
+  border-radius: 999px;
+  overflow: hidden;
+  flex: 1;
+}
+.progress span { display: block; height: 100%; background: var(--mint-600); }
+.btn-primary {
+  margin-top: 8px; width: 100%;
+  background: #4f7cff; color: #fff;
+  border: none; padding: 10px 12px;
+  border-radius: 12px; font-weight: 700; cursor: pointer;
+}
+
+/* === Tasks === */
+.task:nth-of-type(1) { grid-area: task1; margin: 0; }
+.task:nth-of-type(2) { grid-area: task2; margin: 0; }
+.checklist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.checklist li { display: flex; align-items: center; gap: 10px; }
+.checklist input { width: 16px; height: 16px; }
+.task-footer { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+.task-footer input {
+  flex: 1; border: 1px solid var(--border); border-radius: 10px; padding: 8px 10px;
+}
+
+/* === Yearly Ring === */
+.yearly {
+  grid-area: yearly;
+  margin: 0;
+}
+.ring-wrap { position: relative; display: grid; place-items: center; margin-top: 8px; }
+.ring-center { position: absolute; text-align: center; }
+.ring-num { font-size: 36px; font-weight: 800; color: #0d5c4a; }
+.small { font-size: 12px; color: var(--muted); }
+.ring-legend { display: grid; grid-template-columns: repeat(2,1fr); gap: 6px; margin-top: 8px; padding-left: 14px; }
+
+/* === Dropdown Filter (This Month) === */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+.dropdown-menu {
+  position: absolute;
+  top: 110%;
+  right: 0;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  display: none;
+  flex-direction: column;
+  min-width: 120px;
+  z-index: 10;
+}
+.dropdown-menu div {
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 13px;
+}
+.dropdown-menu div:hover {
+  background: var(--mint-100);
+  color: var(--mint-800);
+}
+.dropdown.open .btn-mini {
+  background: var(--mint-200);
+  border-color: var(--mint-300);
+}
+
+/* === Responsive === */
+@media (max-width:1100px) {
+  .grid { 
+    grid-template-columns: 1fr; 
+    grid-template-areas:
+      "stats"
+      "vacancy"
+      "yearly"
+      "task1"
+      "task2"
+      "inprogress";
+  }
+  .yearly, .inprogress, .task { grid-column: 1; }
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width:760px) {
+  .app { grid-template-columns: 1fr; }
+  .sidebar { display: none; }
+  .stats-row { grid-template-columns: 1fr; }
+  .search { min-width: unset; width: 100%; }
+}
