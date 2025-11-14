@@ -25,6 +25,8 @@
             <div class="user-section">
     <!-- Profil Icon -->
 
+ 
+
     <div class="profile-dropdown">
         <button class="profile-btn" id="profileToggle">
             <img src="{{ asset('jasa-barang2/img/pp.jpg') }}" alt="Profile" class="profile-img">
@@ -68,6 +70,7 @@
                             <li><a href="#">Raw Meats</a></li>
                             <li><a href="#">Soft Drinks</a></li>
                             <li><a href="#">View All Categories</a></li>
+                            <li><a href="#">KONTOL</a></li>
                         </ul>
                     </li>
                 <li><a href="#pricing-section">Pricing</a></li>
