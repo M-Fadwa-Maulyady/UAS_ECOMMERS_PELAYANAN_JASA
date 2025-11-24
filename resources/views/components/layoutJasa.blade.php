@@ -1,58 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="id">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Jasa | {{ $title ?? 'Gerak Cepat' }}</title>
-
-    {{-- CSS --}}
-    <link rel="stylesheet" href="{{ asset('ayam/admin.css') }}">
-    <link rel="stylesheet" href="{{ asset('ayam/all.min.css') }}">
-
-    <style>
-        .colored-toast.swal2-icon-success { background-color: #52c41a !important; }
-        .colored-toast.swal2-icon-error { background-color: #ff4d4f !important; }
-        .colored-toast .swal2-title,
-        .colored-toast .swal2-html-container { color: white; }
-    </style>
+  <meta charset="utf-8" />
+  <title>Jasaku Pekerja — Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <!-- App CSS -->
+  <link rel="stylesheet" href="{{ asset('ayam/pekerja.css') }}">
 </head>
-
 <body>
+  <div class="app">
+    <!-- Sidebar -->
+    <x-sidebarJasa></x-sidebarJasa>
 
-    {{-- Navbar --}}
-    <x-navbar />
-
-    {{-- Sidebar Jasa --}}
-    <x-sidebar type="jasa" />
-
-    {{-- CONTENT --}}
-    <main class="content-wrapper">
-        {{ $slot }}
+    <!-- Main -->
+    <main class="main">
+      {{ $slot }}
     </main>
+  </div>
 
-    {{-- JS --}}
-    <script src="{{ asset('ayam/admin.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    {{-- TOAST --}}
-    @if (session('success') || session('error'))
-        <script>
-            const Toast = Swal.mixin({
-                toast: true,
-                position: "bottom-end",
-                iconColor: "white",
-                customClass: { popup: "colored-toast" },
-                showConfirmButton: false,
-                timer: 3000,
-                timerProgressBar: true,
-            });
-            Toast.fire({
-                icon: "{{ session('success') ? 'success' : 'error' }}",
-                title: "{{ session('success') ?? session('error') }}",
-            });
-        </script>
-    @endif
-
+  <script src="{{ asset('ayam/pekerja.js') }}"></script>
 </body>
 </html>

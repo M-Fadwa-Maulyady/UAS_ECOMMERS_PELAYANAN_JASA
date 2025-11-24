@@ -13,7 +13,7 @@ class DashboardController extends Controller
     // $jumlahProduk = Produk::count();
     // $jumlahKategori = Kategori::count();
 
-    return view('dashboard', compact('jumlahAnggota'));
+    return view('admin.dashboard', compact('jumlahAnggota'));
 }
 
 }

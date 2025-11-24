@@ -12,11 +12,15 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'alamat',
-        'no_telp',
+           'name',
+    'email',
+    'password',
+    'alamat',
+    'no_telp',
+    'role',
+    'nama_usaha',
+    'kategori_jasa',
+    'deskripsi_jasa',
     ];
 
     protected $hidden = [
@@ -30,17 +34,5 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
-    }
-    public function peminjaman()
-    {
-        return $this->hasMany(Peminjaman::class, 'user_id');
-    }
-
-    public function isBorrowing($bukuId)
-    {
-        return $this->peminjaman()
-            ->where('buku_id', $bukuId)
-            ->where('status', 'dipinjam')
-            ->exists();
     }
 }

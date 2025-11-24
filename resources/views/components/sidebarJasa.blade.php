@@ -47,7 +47,7 @@
             Pengaturan
         </a>
 
-        <a href="/logout" class="item">
+        <a href="{{ route('logout') }}" class="item">
             <i class="fa-solid fa-right-from-bracket"></i>
             Keluar
         </a>
