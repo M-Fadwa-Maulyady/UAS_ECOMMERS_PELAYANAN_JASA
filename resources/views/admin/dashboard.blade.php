@@ -1,7 +1,5 @@
 <x-layoutAdmin>
-<!-- MAIN -->
-    <main>
-      <div class="grid">
+  <div class="grid">
         <!-- KPI / STATS -->
         <div class="stats">
           <div class="stat"><div class="muted">Income (Bulan ini)</div><div class="value">$8,500 <span class="trend up">+1.7%</span></div></div>
@@ -179,6 +177,4 @@
             </div>
         </div>
       </div>
-    </main>
-    <!-- END MAIN -->
 </x-layoutAdmin>

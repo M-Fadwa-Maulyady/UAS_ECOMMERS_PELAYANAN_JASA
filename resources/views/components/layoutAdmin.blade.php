@@ -1,58 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="id">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Admin | {{ $title ?? 'Gerak Cepat' }}</title>
+  <meta charset="utf-8" />
+  <title>Admin Dashboard — Jasa</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    {{-- CSS --}}
-    <link rel="stylesheet" href="{{ asset('ayam/admin.css') }}">
-    <link rel="stylesheet" href="{{ asset('ayam/all.min.css') }}">
+  <!-- Font & ChartJS -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
-    <style>
-        .colored-toast.swal2-icon-success { background-color: #52c41a !important; }
-        .colored-toast.swal2-icon-error { background-color: #ff4d4f !important; }
-        .colored-toast .swal2-title,
-        .colored-toast .swal2-html-container { color: white; }
-    </style>
+  <!-- CSS -->
+  <link rel="stylesheet" href="{{ asset('ayam/admin.css') }}">
 </head>
-
 <body>
+  <div class="app">
+    <!-- SIDEBAR -->
+    <x-sidebarAdmin></x-sidebarAdmin>
+    
 
-    {{-- Navbar --}}
-    <x-navbar />
 
-    {{-- Sidebar --}}
-    <x-sidebar />
 
-    {{-- CONTENT --}}
-    <main class="content-wrapper">
-        {{ $slot }}
+    <!-- HEADER -->
+
+<header>
+      <div class="hello">
+        <div class="avatar">A</div>
+        <div>
+          <div style="opacity:.9;font-weight:600">Selamat datang, Admin</div>
+          <div class="muted">Pantau performa bisnis & tim pekerja</div>
+        </div>
+      </div>
+      <div class="actions">
+        <input class="search" placeholder="Cari transaksi, pelanggan, pekerja..." />
+        <button class="btn" id="btnRefresh">Refresh</button>
+        <button class="btn primary" id="btnExport">Export Data</button>
+      </div>
+    </header>
+    <!-- MAIN -->
+    <main>
+      {{ $slot }}
     </main>
+  </div>
 
-    {{-- JS --}}
-    <script src="{{ asset('ayam/admin.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    {{-- TOAST --}}
-    @if (session('success') || session('error'))
-        <script>
-            const Toast = Swal.mixin({
-                toast: true,
-                position: "bottom-end",
-                iconColor: "white",
-                customClass: { popup: "colored-toast" },
-                showConfirmButton: false,
-                timer: 3000,
-                timerProgressBar: true,
-            });
-            Toast.fire({
-                icon: "{{ session('success') ? 'success' : 'error' }}",
-                title: "{{ session('success') ?? session('error') }}",
-            });
-        </script>
-    @endif
-
+  <!-- JS -->
+  <script src="{{ asset('ayam/admin.js') }}"></script>
 </body>
 </html>

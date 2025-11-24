@@ -1,3 +1,12 @@
+
+
+const roleSelect = document.getElementById("roleSelect");
+const jasaFields = document.getElementById("jasaFields");
+
+roleSelect.addEventListener("change", () => {
+    jasaFields.style.display = roleSelect.value === "pekerja" ? "block" : "none";
+});
+
 // Toggle password field by id
 function togglePassword(id){
   const el = document.getElementById(id);

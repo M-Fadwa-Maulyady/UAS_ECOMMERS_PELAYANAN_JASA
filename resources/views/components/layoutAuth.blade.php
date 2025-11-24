@@ -14,7 +14,7 @@
         <link rel="stylesheet" href="{{ asset('ayam/login.css') }}">
     @endif
 
-    <link rel="stylesheet" href="{{ asset('ayam/all.min.css') }}">
+    
 </head>
 
 <body>

@@ -1,58 +1,76 @@
 <x-layoutAuth>
-<div class="login-box">
-  <div class="login-logo">
-    <a href="#"><b>Login </b>GerakCepat</a>
-  </div>
 
-  <div class="card">
-    <div class="card-body login-card-body">
-      <p class="login-box-msg">Sign in to start your session</p>
+    <div class="card">
+        {{-- LEFT SIDE --}}
+        <div class="card-left">
+            <h1>Login</h1>
+            <p class="muted">If you are already a member, easily log in</p>
 
-      {{-- Alert error --}}
-      @if ($errors->any())
-        <div class="alert alert-danger">
-          <ul class="mb-0">
-            @foreach ($errors->all() as $err)
-              <li>{{ $err }}</li>
-            @endforeach
-          </ul>
+            {{-- ERROR MESSAGE --}}
+            @if ($errors->any())
+                <div style="color:red; margin-bottom:10px;">
+                    @foreach ($errors->all() as $err)
+                        • {{ $err }} <br>
+                    @endforeach
+                </div>
+            @endif
+
+            {{-- SUCCESS MESSAGE --}}
+            @if (session('success'))
+                <div style="color:green; margin-bottom:10px;">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            {{-- LOGIN FORM --}}
+            <form class="form" method="POST" action="{{ route('login.post') }}">
+                @csrf
+
+                <input 
+                    name="email" 
+                    type="email" 
+                    placeholder="Email" 
+                    value="{{ old('email') }}" 
+                    required
+                />
+
+                <div class="pwd-row">
+                    <input 
+                        id="loginPassword" 
+                        name="password" 
+                        type="password" 
+                        placeholder="Password" 
+                        required
+                    />
+
+                    <button 
+                        type="button" 
+                        class="icon-btn" 
+                        onclick="togglePassword('loginPassword')"
+                    >
+                        👁
+                    </button>
+                </div>
+
+                <button type="submit" class="btn primary">Login</button>
+
+                <div class="or">OR</div>
+
+                <button type="button" class="btn outline">Login with Google</button>
+
+                <a class="link small" href="#">Forgot my password</a>
+
+                <p class="muted small">
+                    If you don't have an account, 
+                    <a href="{{ route('register') }}">Register</a>
+                </p>
+            </form>
         </div>
-      @endif
 
-      @if (session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-      @endif
-
-      <form action="{{ route('login.post') }}" method="POST">
-        @csrf
-        <div class="input-group mb-3">
-          <input type="email" name="email" class="form-control" placeholder="Email" value="{{ old('email') }}" required>
-          <div class="input-group-append">
-            <div class="input-group-text"><span class="fas fa-envelope"></span></div>
-          </div>
+        {{-- RIGHT IMAGE --}}
+        <div class="card-right">
+            <img src="{{ asset('ayam/gambar-login.png') }}" alt="illustration">
         </div>
-
-        <div class="input-group mb-3">
-          <input type="password" name="password" class="form-control" placeholder="Password" required>
-          <div class="input-group-append">
-            <div class="input-group-text"><span class="fas fa-lock"></span></div>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-4">
-            <button type="submit" class="btn btn-primary btn-block">Sign In</button>
-          </div>
-        </div>
-      </form>
-
-      <p class="mt-2 mb-1">
-        <a href="#">I forgot my password</a>
-      </p>
-      <p class="mb-0">
-        <a href="{{ route('register') }}" class="text-center">Register a new membership</a>
-      </p>
     </div>
-  </div>
-</div>
+
 </x-layoutAuth>

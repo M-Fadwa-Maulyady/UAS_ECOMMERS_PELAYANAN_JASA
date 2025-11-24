@@ -10,11 +10,11 @@
 
     @if ($role === 'admin')
         {{-- Sidebar Admin --}}
-        <x-sidebar-admin />
+      
 
     @elseif ($role === 'jasa')
         {{-- Sidebar Jasa --}}
-        <x-sidebar-jasa />
+   
 
     @else
         {{-- USER tidak pakai sidebar — KOSONG --}}
