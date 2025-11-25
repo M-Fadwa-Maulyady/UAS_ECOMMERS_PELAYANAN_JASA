@@ -1,28 +1,5 @@
 <x-layoutJasa>
 <!-- Topbar -->
-      <header class="topbar">
-        <div class="search">
-          <i class="fa-solid fa-magnifying-glass"></i>
-          <input type="text" placeholder="Cari proyek, klien, file…">
-        </div>
-
-        <div class="top-actions">
-          <div class="locale">
-            <img src="https://flagcdn.com/w20/id.png" alt="ID">
-            <span>Ind (ID)</span>
-            <i class="fa-solid fa-chevron-down"></i>
-          </div>
-          <button class="icon-btn"><i class="fa-regular fa-bell"></i></button>
-          <div class="profile">
-            <img src="https://i.pravatar.cc/100?img=15" alt="avatar">
-            <div class="info">
-              <strong>Rafli Saputra</strong>
-              <span class="muted">Freelance Designer</span>
-            </div>
-          </div>
-        </div>
-      </header>
-
       <!-- Content -->
       <section class="grid">
         <!-- Stats -->
