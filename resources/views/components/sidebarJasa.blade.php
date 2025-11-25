@@ -12,46 +12,35 @@
     {{-- Menu --}}
     <nav class="menu">
 
-        <a href="/jasa/dashboard" class="item active">
+        <a href="{{ route('pekerja.dashboard') }}" class="item active">
             <i class="fa-solid fa-gauge"></i>
             Dashboard
         </a>
 
-        <a href="/jasa/proyek" class="item">
-            <i class="fa-solid fa-diagram-project"></i>
-            Proyek
+        <a href="{{ route('pekerja.manajemen-jasa.index') }}" class="item">
+            <i class="fa-solid fa-briefcase"></i>
+            Manajemen Jasa
         </a>
 
         <a href="/jasa/tugas" class="item">
-            <i class="fa-solid fa-list-check"></i>
-            Tugas Saya
+            <i class="fa-solid fa-cart-arrow-down"></i>
+            Order Management
         </a>
 
         <a href="/jasa/kalender" class="item">
-            <i class="fa-solid fa-calendar-days"></i>
-            Kalender
+            <i class="fa-solid fa-dollar-sign"></i>
+            Keuangan
         </a>
 
         <a href="/jasa/laporan" class="item">
-            <i class="fa-solid fa-chart-column"></i>
-            Laporan
+            <i class="fa-solid fa-comment"></i>
+            Chat / Komunikasi
         </a>
 
         <a href="/jasa/pesan" class="item">
-            <i class="fa-solid fa-message"></i>
-            Pesan
+            <i class="fa-solid fa-pen-to-square"></i>
+            Review
         </a>
-
-        <a href="/jasa/pengaturan" class="item">
-            <i class="fa-solid fa-gear"></i>
-            Pengaturan
-        </a>
-
-        <a href="{{ route('logout') }}" class="item">
-            <i class="fa-solid fa-right-from-bracket"></i>
-            Keluar
-        </a>
-
     </nav>
 
     {{-- Promo Box --}}

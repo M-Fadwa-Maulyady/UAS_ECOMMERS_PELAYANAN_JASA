@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AnggotaController;
+use App\Http\Controllers\JasaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -63,6 +64,36 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::delete('/anggota/delete/{id}', [AnggotaController::class, 'destroy'])->name('deleteAnggota');
 
 });
+
+Route::middleware(['auth', 'role:pekerja'])->group(function () {
+
+    Route::get('/pekerja/dashboard', function () {
+        return view('pekerja.dashboard');
+    })->name('pekerja.dashboard');
+
+    // Manajemen Jasa by Pekerja
+    Route::get('/pekerja/manajemen-jasa', [JasaController::class, 'index'])
+        ->name('pekerja.manajemen-jasa.index');
+
+    Route::get('/pekerja/manajemen-jasa/create', [JasaController::class, 'create'])
+        ->name('pekerja.manajemen-jasa.create');
+
+    Route::post('/pekerja/manajemen-jasa/store', [JasaController::class, 'store'])
+        ->name('pekerja.manajemen-jasa.store');
+
+    Route::get('/pekerja/manajemen-jasa/edit/{id}', [JasaController::class, 'edit'])
+        ->name('pekerja.manajemen-jasa.edit');
+
+    Route::put('/pekerja/manajemen-jasa/update/{id}', [JasaController::class, 'update'])
+        ->name('pekerja.manajemen-jasa.update');
+
+    Route::delete('/pekerja/manajemen-jasa/delete/{id}', [JasaController::class, 'destroy'])
+        ->name('pekerja.manajemen-jasa.delete');
+});
+
+
+
+
 
 
 /*
