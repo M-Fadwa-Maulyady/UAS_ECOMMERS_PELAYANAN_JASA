@@ -12,7 +12,7 @@
     <header class="top-header">
     <div class="container-top">
         <img src="jasa-barang2/img/logo.png" alt="Logo" class="logo">
-        
+
         <div class="header-right-info">
             <div class="contact-info">
                 <div class="phone">
@@ -134,75 +134,33 @@
         </div>
     </section>
 
-    <section class="services" id="services-section">
-        <div class="services-header">
-            <p class="service-subtitle">SERVICES</p>
-            <h2>What We <span>Offer</span> For Our Customers</h2>
+   <section class="services" id="services-section">
+    <div class="services-header">
+        <p class="service-subtitle">SERVICES</p>
+        <h2>What We <span>Offer</span> For Our Customers</h2>
+    </div>
+
+    <div class="offer-slider-container">
+        <div class="offer-slider">
+            @foreach($jasas as $jasa)
+                <div class="offer-card">
+                    <img src="{{ asset('storage/' . $jasa->gambar) }}" alt="{{ $jasa->nama }}">
+                    <div class="offer-content">
+                        <h3>{{ $jasa->nama }}</h3>
+                        <p>{{ Str::limit($jasa->deskripsi, 100) }}</p>
+                        <button class="btn-offer"
+                            onclick="window.location.href='{{ route('jasa.show', $jasa->slug) }}'">
+                            Read More
+                        </button>
+
+                    </div>
+                </div>
+            @endforeach
         </div>
+    </div>
+</section>
 
-        <div class="offer-slider-container">
-            <div class="offer-slider">
-                <div class="offer-card">
-                    <img src="jasa-barang2/img/jasa_pembasmi.jpg" alt="jasa_pembasmi">
-                    <div class="offer-content">
-                        <h3>Jasa Pembasmi</h3>
-                        <p>We provide professional pest control services to eliminate unwanted pests.</p>
-                        <button class="btn-offer">Read More</button>
-                    </div>
-                </div>
 
-                <div class="offer-card">
-                    <img src="jasa-barang2/img/jasa_ac.jpg" alt="jasa_ac">
-                    <div class="offer-content">
-                        <h3>Jasa AC</h3>
-                        <p>We provide professional air conditioning services for installation and maintenance.</p>
-                        <button class="btn-offer">Read More</button>
-                    </div>
-                </div>
-
-                <div class="offer-card">
-                    <img src="jasa-barang2/img/jasa_antar_barang.jpg" alt="jasa_antar_barang">
-                    <div class="offer-content">
-                        <h3>Jasa Antar Barang</h3>
-                        <p>We provide reliable delivery services for your goods.</p>
-                        <button class="btn-offer">Read More</button>
-                    </div>
-                </div>
-
-                <div class="offer-card">
-                    <img src="jasa-barang2/img/jasa_cat.jpg" alt="jasa_cat">
-                    <div class="offer-content">
-                        <h3>Jasa Cat</h3>
-                        <p>We provide professional painting services for homes and offices.</p>
-                        <button class="btn-offer">Read More</button>
-                    </div>
-                </div>
-
-                <div class="offer-card">
-                    <img src="jasa-barang2/img/jasa_sova.jpg" alt="jasa_sova">
-                    <div class="offer-content">
-                        <h3>Jasa Sova</h3>
-                        <p>We provide professional sofa cleaning services to refresh your furniture.</p>
-                        <button class="btn-offer">Read More</button>
-                    </div>
-                </div>
-
-                <div class="offer-card">
-                    <img src="jasa-barang2/img/jasa_tukang_potong_rumput.jpg" alt="jasa_tukang_potong_rumput">
-                    <div class="offer-content">
-                        <h3>Jasa Tukang Potong Rumput</h3>
-                        <p>We provide professional lawn mowing services to keep your yard tidy.</p>
-                        <button class="btn-offer">Read More</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="offer-dots">
-                <span class="dot active"></span>
-                <span class="dot"></span>
-            </div>
-        </div>
-    </section>
 
     <section class="why-choose">
         <div class="container">
@@ -304,7 +262,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="company-guarantees">
                 <div class="guarantee-item">
                     <i class="fas fa-shield-alt"></i>
