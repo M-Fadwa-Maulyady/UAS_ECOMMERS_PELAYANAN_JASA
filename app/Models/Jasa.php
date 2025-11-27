@@ -7,20 +7,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class Jasa extends Model
 {
-
-    protected $fillable = ['nama', 'slug', 'deskripsi', 'harga', 'durasi', 'kontak', 'gambar'];
-}
-
-
     use HasFactory;
 
     protected $fillable = [
-        'nama_jasa',
+        'nama',
+        'slug',
         'deskripsi',
-        'estimasi_waktu',
         'harga',
-        'jumlah_revisi',
+        'durasi',
+        'kontak',
         'gambar',
+
+        // untuk pekerja
+        'nama_jasa',
+        'estimasi_waktu',
+        'jumlah_revisi',
     ];
 }
-
