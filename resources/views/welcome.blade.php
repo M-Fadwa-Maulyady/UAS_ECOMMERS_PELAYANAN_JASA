@@ -8,7 +8,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-<header class="top-header">
+
+<header class="top-header"
     <div class="container-top">
         <img src="jasa-barang2/img/logo.png" alt="Logo" class="logo">
 
