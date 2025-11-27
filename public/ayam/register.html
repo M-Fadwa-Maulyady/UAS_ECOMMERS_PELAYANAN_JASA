@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Register</title>
+  <link rel="stylesheet" href="register.css" />
+</head>
+<body>
+  <div class="card">
+    <div class="card-left">
+      <h1>Register</h1>
+      <p class="muted">Create your account to get started</p>
+
+      <!-- If using Laravel: method="POST" action="{{ route('register') }}" and include @csrf -->
+      <form id="registerForm" class="form">
+        <input name="name" type="text" placeholder="Nama Lengkap" required />
+        <input name="email" type="email" placeholder="Email" required />
+        <input id="regPassword" name="password" type="password" placeholder="Password" required />
+
+        <label class="label-inline">Register as</label>
+        <select id="roleSelect" name="role" required>
+          <option value="user">User</option>
+          <option value="jasa">Jasa (Penyedia Layanan)</option>
+        </select>
+
+        <div id="jasaFields" class="jasa-fields" style="display:none;">
+          <input name="nama_usaha" type="text" placeholder="Nama Usaha" />
+          <input name="kategori_jasa" type="text" placeholder="Kategori Jasa (contoh: Servis AC)" />
+          <textarea name="deskripsi_jasa" rows="3" placeholder="Deskripsi singkat jasa"></textarea>
+        </div>
+
+        <button type="submit" class="btn primary">Register</button>
+
+        <p class="muted small">Sudah punya akun? <a href="login.html">Login</a></p>
+      </form>
+    </div>
+
+    <div class="card-right">
+      <img src="gambar-login.png" alt="illustration" />
+    </div>
+  </div>
+
+  <script src="register.js"></script>
+</body>
+</html>
