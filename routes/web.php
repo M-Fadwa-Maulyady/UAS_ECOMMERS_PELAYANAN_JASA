@@ -1,10 +1,15 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AnggotaController;
+use App\Http\Controllers\KategoriController;
+use App\Http\Controllers\JasaController;
+use App\Models\Jasa;
+
+// Halaman utama (menampilkan data jasa di welcome)
+
 use App\Http\Controllers\JasaController;
 
 /*
@@ -14,9 +19,12 @@ use App\Http\Controllers\JasaController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    $jasas = Jasa::all();
+    return view('welcome', compact('jasas'));
 });
 
+// Halaman landing publik
+Route::get('/landing', [JasaController::class, 'index'])->name('landing');
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +43,7 @@ Route::get('/landing', function () {
 | Auth Routes
 |--------------------------------------------------------------------------
 */
+
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 
@@ -43,6 +52,9 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
 Route::post('/register', [AuthController::class, 'register'])->name('register.post');
 
+// Admin area (hanya untuk user dengan role admin)
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    // CRUD Data Anggota
 
 /*
 |--------------------------------------------------------------------------
@@ -63,6 +75,25 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::put('/anggota/update/{id}', [AnggotaController::class, 'update'])->name('updateAnggota');
     Route::delete('/anggota/delete/{id}', [AnggotaController::class, 'destroy'])->name('deleteAnggota');
 
+    // Data Kategori
+    Route::get('/data-kategori', [KategoriController::class, 'index'])->name('dataKategori');
+
+    // CRUD Data Jasa di panel admin
+    Route::prefix('admin/jasa')->group(function () {
+        Route::get('/', [JasaController::class, 'adminIndex'])->name('jasa.index');
+        Route::get('/create', [JasaController::class, 'create'])->name('jasa.create');
+        Route::post('/', [JasaController::class, 'store'])->name('jasa.store');
+        Route::get('/{id}/edit', [JasaController::class, 'edit'])->name('jasa.edit');
+        Route::put('/{id}', [JasaController::class, 'update'])->name('jasa.update');
+        Route::delete('/{id}', [JasaController::class, 'destroy'])->name('jasa.destroy');
+    });
+});
+
+// Halaman detail jasa (publik)
+Route::get('/jasa/{slug}', [JasaController::class, 'show'])->name('jasa.show');
+
+// Dashboard umum (akses setelah login)
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 });
 
 Route::middleware(['auth', 'role:pekerja'])->group(function () {
