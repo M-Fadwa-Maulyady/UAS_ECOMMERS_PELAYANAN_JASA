@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AnggotaController;
-use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\JasaController;
 use App\Http\Controllers\LandingJasaController;
 use App\Models\Jasa;
@@ -48,7 +47,6 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::put('/anggota/update/{id}', [AnggotaController::class, 'update'])->name('updateAnggota');
     Route::delete('/anggota/delete/{id}', [AnggotaController::class, 'destroy'])->name('deleteAnggota');
 
-    Route::get('/data-kategori', [KategoriController::class, 'index'])->name('dataKategori');
 
     Route::prefix('admin/jasa')->group(function () {
         Route::get('/', [JasaController::class, 'adminIndex'])->name('jasa.index');
