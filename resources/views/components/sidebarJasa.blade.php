@@ -48,9 +48,9 @@
         <div class="badge">J</div>
         <div class="txt">
             <div class="t">Jasaku Pro</div>
-            <div class="s">Akses fitur lengkap</div>
+            <div class="s">Semangat Bekerja</div>
         </div>
-        <button class="btn-pro">Upgrade</button>
+        <button class="btn-pro">Logout</button>
     </div>
 
 </aside>
