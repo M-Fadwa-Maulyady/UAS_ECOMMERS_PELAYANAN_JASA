@@ -11,7 +11,7 @@ class LandingJasaController extends Controller
     public function index()
     {
         $jasas = Jasa::latest()->get();
-        return view('welcome', compact('jasas'));
+        return view('user.landing', compact('jasas'));
     }
 
     public function show($slug)
