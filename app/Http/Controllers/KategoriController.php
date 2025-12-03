@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Kategori;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class KategoriController extends Controller
 {
@@ -24,10 +25,20 @@ class KategoriController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama' => 'required|string|max:255',
+            'nama'       => 'required|string|max:255',
+            'icon'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
-        Kategori::create($request->only(['nama', 'deskripsi']));
+        $data = $request->only(['nama']);
+
+        // Upload icon jika ada
+        if ($request->hasFile('icon')) {
+            $filename = time() . '.' . $request->icon->extension();
+            $request->icon->storeAs('kategori', $filename, 'public');
+            $data['icon'] = $filename;
+        }
+
+        Kategori::create($data);
 
         return redirect()->route('kategori.index')->with('success', 'Kategori berhasil ditambahkan!');
     }
@@ -43,17 +54,41 @@ class KategoriController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'nama' => 'required|string|max:255',
+            'nama'       => 'required|string|max:255',
+            'icon'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
-        Kategori::findOrFail($id)->update($request->only(['nama', 'deskripsi']));
+        $kategori = Kategori::findOrFail($id);
+        $data = $request->only(['nama']);
+
+        // Jika upload icon baru
+        if ($request->hasFile('icon')) {
+
+            // Hapus icon lama jika ada
+            if ($kategori->icon && Storage::disk('public')->exists('kategori/' . $kategori->icon)) {
+                Storage::disk('public')->delete('kategori/' . $kategori->icon);
+            }
+
+            $filename = time() . '.' . $request->icon->extension();
+            $request->icon->storeAs('kategori', $filename, 'public');
+            $data['icon'] = $filename;
+        }
+
+        $kategori->update($data);
 
         return redirect()->route('kategori.index')->with('success', 'Kategori berhasil diperbarui!');
     }
 
     public function destroy($id)
     {
-        Kategori::destroy($id);
+        $kategori = Kategori::findOrFail($id);
+
+        // Hapus icon dari storage
+        if ($kategori->icon && Storage::disk('public')->exists('kategori/' . $kategori->icon)) {
+            Storage::disk('public')->delete('kategori/' . $kategori->icon);
+        }
+
+        $kategori->delete();
 
         return redirect()->route('kategori.index')->with('success', 'Kategori berhasil dihapus!');
     }

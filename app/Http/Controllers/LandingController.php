@@ -3,16 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\Jasa;
+use App\Models\Kategori;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 
-class LandingJasaController extends Controller
+class LandingController extends Controller
 {
     public function index()
     {
         $jasas = Jasa::latest()->get();
-        return view('user.landing', compact('jasas'));
+        $kategori = Kategori::orderBy('nama')->get();
+
+        return view('user.landing', compact('jasas', 'kategori'));
     }
+
 
     public function show($slug)
     {
@@ -20,4 +23,3 @@ class LandingJasaController extends Controller
         return view('jasa.show', compact('jasa'));
     }
 }
-
