@@ -13,6 +13,7 @@
 
   <!-- CSS -->
   <link rel="stylesheet" href="{{ asset('ayam/admin.css') }}">
+  <link rel="stylesheet" href="{{ asset('ayam/manajemen_user.css') }}">
 </head>
 <body>
   <div class="app">

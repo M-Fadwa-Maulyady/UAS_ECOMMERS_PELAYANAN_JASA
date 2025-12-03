@@ -15,9 +15,10 @@
             <i class="fas fa-chart-line"></i> Dashboard
         </a>
 
-        <a href="/admin/user">
+        <a href="{{ route('manajemen-user.index') }}" class="{{ request()->is('manajemen-user*') ? 'active' : '' }}">
             <i class="fas fa-users"></i> Manajemen User
         </a>
+
 
         <a href="/admin/pekerja">
             <i class="fas fa-user-tie"></i> Manajemen Pekerja

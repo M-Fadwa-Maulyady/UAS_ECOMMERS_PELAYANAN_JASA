@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AnggotaController;
 use App\Http\Controllers\JasaController;
 use App\Http\Controllers\LandingJasaController;
+use App\Http\Controllers\ManajemenUserController;
 use App\Models\Jasa;
 
 /*
@@ -56,6 +57,9 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::put('/{id}', [JasaController::class, 'update'])->name('jasa.update');
         Route::delete('/{id}', [JasaController::class, 'destroy'])->name('jasa.destroy');
     });
+
+    Route::resource('/manajemen-user', ManajemenUserController::class);
+
 });
 
 /*
