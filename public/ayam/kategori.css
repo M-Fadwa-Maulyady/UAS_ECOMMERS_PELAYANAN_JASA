@@ -1,0 +1,208 @@
+/* ===== Container ===== */
+.kategori-container {
+    background: #fff;
+    padding: 22px;
+    border-radius: 16px;
+    border: 1px solid #dfe7e4;
+    box-shadow: 0px 4px 14px rgba(0,0,0,0.05);
+
+}
+
+/* ===== Header Title + Button ===== */
+.header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+.header-section h3 {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0;
+}
+
+/* Button add */
+.btn-kategori-add {
+    background: #0D5C4A;
+    padding: 10px 18px;
+    color: #fff;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: .2s;
+}
+.btn-kategori-add:hover {
+    background: #09402E;
+    transform: translateY(-2px);
+}
+
+/* ===== Table ===== */
+.table-wrapper {
+    overflow-x: auto;
+}
+
+.kategori-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+/* Table Header */
+.kategori-table thead {
+    background: #0D5C4A;
+}
+.kategori-table th {
+    color: white;
+    padding: 14px;
+    text-align: left;
+    font-weight: 600;
+    letter-spacing: .3px;
+}
+
+/* Table Body */
+.kategori-table td {
+    padding: 14px 12px;
+    border-bottom: 1px solid #e6ece9;
+}
+
+/* Hover Effect */
+.kategori-table tbody tr:hover {
+    background: #E8F8F2;
+}
+
+/* Empty Row */
+.empty-state td {
+    text-align: center;
+    padding: 18px;
+    color: #6b7280;
+    font-style: italic;
+}
+
+/* ===== Buttons (Edit/Delete) ===== */
+.action-btns {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-edit {
+    background: #2563eb;
+    color: white !important;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: .2s;
+}
+.btn-edit:hover {
+    background: #1e40af;
+}
+
+.btn-delete {
+    background: #dc2626;
+    color: white !important;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: .2s;
+}
+.btn-delete:hover {
+    background: #991b1b;
+}
+
+/* ===== Form Styling ===== */
+
+.form-wrapper {
+    display: flex;
+    justify-content: center;
+    padding-top: 20px;
+}
+
+.form-card {
+    width: 100%;
+    max-width: 550px;
+    background: #fff;
+    padding: 24px;
+    border-radius: 16px;
+    border: 1px solid #dfe7e4;
+    box-shadow: 0px 4px 12px rgba(0,0,0,0.04);
+}
+
+.form-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 18px;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 6px;
+    display: block;
+}
+
+.input-field {
+    width: 100%;
+    border-radius: 10px;
+    padding: 10px 12px;
+    border: 1px solid #cddad5;
+    font-size: 14px;
+}
+
+.input-field:focus {
+    border-color: #0d5c4a;
+    box-shadow: 0 0 5px rgba(13,92,74,.25);
+    outline: none;
+}
+
+.textarea {
+    min-height: 90px;
+    resize: vertical;
+}
+
+/* ===== Buttons ===== */
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.btn-back {
+    background: #e5e7eb;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    color: #334155;
+}
+
+.btn-save {
+    background: #0D5C4A;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-weight: 600;
+    color: white;
+    transition: .2s;
+}
+.btn-save:hover {
+    background: #09402e;
+    transform: translateY(-2px);
+}
+
+.btn-update {
+    background: #F59E0B;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-weight: 600;
+    color: white;
+    transition: .2s;
+}
+.btn-update:hover {
+    background: #d97706;
+    transform: translateY(-2px);
+}
+

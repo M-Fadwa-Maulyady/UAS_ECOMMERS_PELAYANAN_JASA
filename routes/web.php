@@ -7,6 +7,9 @@ use App\Http\Controllers\AnggotaController;
 use App\Http\Controllers\JasaController;
 use App\Http\Controllers\LandingJasaController;
 use App\Http\Controllers\ManajemenUserController;
+use App\Http\Controllers\KategoriController;
+use App\Http\Controllers\ManajemenPekerjaController;
+
 use App\Models\Jasa;
 
 /*
@@ -59,6 +62,18 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     });
 
     Route::resource('/manajemen-user', ManajemenUserController::class);
+
+    Route::resource('kategori', KategoriController::class);
+
+Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
+
+    Route::get('/pekerja', [ManajemenPekerjaController::class, 'index'])->name('pekerja.index');
+    Route::get('/pekerja/{id}', [ManajemenPekerjaController::class, 'show'])->name('pekerja.show');
+    Route::put('/pekerja/{id}/status', [ManajemenPekerjaController::class, 'updateStatus'])->name('pekerja.updateStatus');
+    Route::delete('/pekerja/{id}', [ManajemenPekerjaController::class, 'destroy'])->name('pekerja.delete');
+
+});
+
 
 });
 
