@@ -15,11 +15,17 @@
             <i class="fas fa-chart-line"></i> Dashboard
         </a>
 
-        <a href="/admin/user">
+        <a href="{{ route('manajemen-user.index') }}" class="{{ request()->is('manajemen-user*') ? 'active' : '' }}">
             <i class="fas fa-users"></i> Manajemen User
         </a>
 
-        <a href="/admin/pekerja">
+        <a href="{{ route('kategori.index') }}" 
+            class="{{ request()->is('kategori*') ? 'active' : '' }}">
+            <i class="fas fa-tags"></i> Kategori Jasa
+        </a>
+
+        <a href="{{ route('pekerja.index') }}" 
+            class="{{ request()->is('admin/pekerja*') ? 'active' : '' }}">
             <i class="fas fa-user-tie"></i> Manajemen Pekerja
         </a>
 
@@ -46,11 +52,10 @@
 
     {{-- Promo Box --}}
     <div class="pro-box">
-        <div>
-            <strong>Get Pro</strong><br>
-            <span class="muted">Unlock advanced analytics & export.</span>
-        </div>
-        <button id="btnGoPro">Upgrade</button>
+        <form action="{{ route('logout') }}" method="POST" class="logout-form">
+                @csrf
+                <button type="submit"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </form>
     </div>
 
 </aside>
