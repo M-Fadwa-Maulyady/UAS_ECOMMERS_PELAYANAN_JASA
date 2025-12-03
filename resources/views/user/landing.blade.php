@@ -129,40 +129,53 @@
     <!-- ================= CATEGORY SLIDER ================= -->
     <section class="browse-category" id="category-section">
 
-        <div class="category-header">
-            <h2>Browse by Category</h2>
-            <a href="#" class="view-all">All Categories →</a>
+    <div class="category-header">
+        <h2>Browse by Category</h2>
+
+        <!-- Tombol All Categories harus memanggil filter, bukan route -->
+        <span class="view-all filter-btn" data-kategori="all" style="cursor:pointer;">
+            All Categories →
+        </span>
+    </div>
+
+    <div class="category-slider-container">
+
+        <button class="slide-btn left"><i class="fa fa-chevron-left"></i></button>
+
+        <div class="category-slider">
+            <!-- Loop kategori -->
+            @foreach ($kategori as $item)
+                <div class="category-card filter-btn" data-kategori="{{ $item->id }}">
+
+                    @if ($item->icon)
+                        <img 
+                            src="{{ asset('storage/kategori/' . $item->icon) }}" 
+                            alt="Icon {{ $item->nama }}"
+                            class="category-icon"
+                        >
+                    @else
+                        <img 
+                            src="{{ asset('default/category.png') }}" 
+                            alt="Default Icon"
+                            class="category-icon"
+                        >
+                    @endif
+
+                    <p>{{ $item->nama }}</p>
+
+                </div>
+            @endforeach
+
         </div>
 
-        <div class="category-slider-container">
+        <button class="slide-btn right"><i class="fa fa-chevron-right"></i></button>
 
-            <button class="slide-btn left"><i class="fa fa-chevron-left"></i></button>
+    </div>
 
-            <div class="category-slider">
+</section>
 
-                <div class="category-card"><img src="jasa-barang2/img/bongkar.png"><p>Jasa Bongkar Pasang</p></div>
-                <div class="category-card"><img src="jasa-barang2/img/pengempangan.png"><p>Jasa Pengepakan</p></div>
-                <div class="category-card"><img src="jasa-barang2/img/penyimpanan.png"><p>Jasa Penyimpanan</p></div>
-                <div class="category-card"><img src="jasa-barang2/img/antar_barang.png"><p>Jasa Pengantaran</p></div>
-                <div class="category-card"><img src="jasa-barang2/img/surat_izin.png"><p>Pengurusan Dokumen</p></div>
-                <div class="category-card"><img src="jasa-barang2/img/bersih.png"><p>Deep Cleaning</p></div>
-                <div class="category-card"><img src="jasa-barang2/img/sofa.png"><p>Cuci Sofa & Karpet</p></div>
-                <div class="category-card"><img src="jasa-barang2/img/ac.png"><p>Servis & Cuci AC</p></div>
-                <div class="category-card"><img src="jasa-barang2/img/pembasmi.png"><p>Pest Control</p></div>
-                <div class="category-card"><img src="jasa-barang2/img/perawatan.png"><p>Perawatan Taman</p></div>
-                <div class="category-card"><img src="jasa-barang2/img/semua.png"><p>Tukang Serba Bisa</p></div>
-                <div class="category-card"><img src="jasa-barang2/img/listrik.png"><p>Perbaikan Listrik</p></div>
-                <div class="category-card"><img src="jasa-barang2/img/cat_rumah.png"><p>Cat Rumah</p></div>
-                <div class="category-card"><img src="jasa-barang2/img/kurir.png"><p>Kurir Kilat</p></div>
-                <div class="category-card"><img src="jasa-barang2/img/jastip.png"><p>Jastip</p></div>
-                <div class="category-card"><img src="jasa-barang2/img/tiket.png"><p>Pemesanan Tiket</p></div>
 
-            </div>
 
-            <button class="slide-btn right"><i class="fa fa-chevron-right"></i></button>
-
-        </div>
-    </section>
 
     <!-- ============== SERVICES (HANYA 1, TIDAK DOBEL) ============== -->
 <section class="services" id="services-section">

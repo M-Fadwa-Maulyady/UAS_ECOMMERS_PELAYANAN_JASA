@@ -5,7 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AnggotaController;
 use App\Http\Controllers\JasaController;
-use App\Http\Controllers\LandingJasaController;
+use App\Http\Controllers\LandingController;
 use App\Http\Controllers\ManajemenUserController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\ManajemenPekerjaController;
@@ -18,9 +18,13 @@ use App\Models\Jasa;
 |--------------------------------------------------------------------------
 */
 
-Route::get('/', [LandingJasaController::class, 'index'])->name('landing');
-Route::get('/landing', [LandingJasaController::class, 'index'])->name('landing.list');
-Route::get('/jasa/{slug}', [LandingJasaController::class, 'show'])->name('jasa.show');
+Route::get('/', [LandingController::class, 'index'])->name('landing');
+// Halaman semua kategori
+Route::get('/kategori', [LandingController::class, 'index'])->name('kategori.all');
+
+// Halaman detail kategori (tampilkan jasa berdasarkan kategori)
+Route::get('/landing', [LandingController::class, 'index'])->name('landing.list');
+Route::get('/jasa/{slug}', [LandingController::class, 'show'])->name('jasa.show');
 
 /*
 |--------------------------------------------------------------------------

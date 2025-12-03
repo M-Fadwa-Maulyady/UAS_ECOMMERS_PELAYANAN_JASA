@@ -13,7 +13,7 @@ class Kategori extends Model
 
     protected $fillable = [
         'nama',
-        'deskripsi',
+        'icon', // <--- tambahkan ini ya Fadwa!
     ];
 
     /** 

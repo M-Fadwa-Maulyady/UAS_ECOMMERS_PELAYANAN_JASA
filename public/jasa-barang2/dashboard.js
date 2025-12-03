@@ -20,60 +20,77 @@ window.addEventListener('scroll', () => {
         nav.style.boxShadow = 'none';
     }
 });
-
 // ===================================
 // === SMOOTH SLIDER KATEGORI (CATEGORY) ===
 // ===================================
 
 const categorySlider = document.querySelector('.category-slider');
 let cards = Array.from(document.querySelectorAll('.category-card'));
-const leftBtn = document.querySelector('.slide-btn.left');
-const rightBtn = document.querySelector('.slide-btn.right');
-// Lebar kartu 150px + gap 20px = 170px per kartu (sesuai asumsi layout)
-const cardWidth = 170; 
-const visibleCards = 8;
-let currentIndex = visibleCards; 
-let autoSlide;
-let isTransitioning = false;
 
-// --- CLONE ELEMENTS FOR SMOOTH LOOP ---
-const firstClones = cards.slice(0, visibleCards).map(card => card.cloneNode(true));
-const lastClones = cards.slice(-visibleCards).map(card => card.cloneNode(true));
+if (!categorySlider || cards.length === 0) {
+    console.warn("Category slider not ready — no cards found.");
+} else {
 
-firstClones.forEach(clone => categorySlider.appendChild(clone));
-lastClones.forEach(clone => categorySlider.prepend(clone));
+    const leftBtn = document.querySelector('.slide-btn.left');
+    const rightBtn = document.querySelector('.slide-btn.right');
 
-cards = Array.from(document.querySelectorAll('.category-card'));
+    const cardWidth = 170;
+    let visibleCards = Math.min(cards.length, 3);
+    let currentIndex = visibleCards;
 
-// Set posisi awal
-categorySlider.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
-categorySlider.style.transition = 'transform 0.6s ease';
+    let isTransitioning = false;
 
-// --- UPDATE SLIDE ---
-function updateCategorySlide() {
-    if (isTransitioning) return;
-    isTransitioning = true;
-    categorySlider.style.transition = 'transform 0.6s ease';
+    // clone untuk infinite loop
+    const firstClones = cards.slice(0, visibleCards).map(c => c.cloneNode(true));
+    const lastClones = cards.slice(-visibleCards).map(c => c.cloneNode(true));
+
+    firstClones.forEach(clone => categorySlider.appendChild(clone));
+    lastClones.forEach(clone => categorySlider.prepend(clone));
+
+    cards = Array.from(document.querySelectorAll('.category-card'));
+
+    // posisi awal
     categorySlider.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
-}
+    categorySlider.style.transition = "transform 0.5s ease";
 
-// --- RESET POSITION (tanpa loncat) ---
-categorySlider.addEventListener('transitionend', () => {
-    isTransitioning = false;
+    function updateCategorySlide() {
+        if (isTransitioning) return;
+        isTransitioning = true;
 
-    // Reset ke awal (jika melewati batas akhir)
-    if (currentIndex >= cards.length - visibleCards) {
-        currentIndex = visibleCards;
-        categorySlider.style.transition = 'none';
-        categorySlider.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
-    } 
-    // Reset ke akhir (jika melewati batas awal)
-    else if (currentIndex < visibleCards) {
-        currentIndex = cards.length - visibleCards * 2;
-        categorySlider.style.transition = 'none';
+        categorySlider.style.transition = "transform 0.5s ease";
         categorySlider.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
     }
-});
+
+    // reset loop
+    categorySlider.addEventListener('transitionend', () => {
+        isTransitioning = false;
+
+        if (currentIndex >= cards.length - visibleCards) {
+            currentIndex = visibleCards;
+            categorySlider.style.transition = "none";
+            categorySlider.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
+        }
+
+        if (currentIndex < visibleCards) {
+            currentIndex = cards.length - visibleCards * 2;
+            categorySlider.style.transition = "none";
+            categorySlider.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
+        }
+    });
+
+    // tombol next / prev
+    rightBtn.addEventListener('click', () => {
+        currentIndex++;
+        updateCategorySlide();
+    });
+
+    leftBtn.addEventListener('click', () => {
+        currentIndex--;
+        updateCategorySlide();
+    });
+
+}
+
 
 // --- NEXT & PREV HANDLERS ---
 function nextCategorySlide() {
