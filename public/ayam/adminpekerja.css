@@ -1,0 +1,50 @@
+.user-table th {
+    background: var(--mint-800);
+    color: white;
+    font-weight: 600;
+}
+
+.user-table td {
+    padding: 12px 10px;
+}
+
+.btn-view {
+    background: #2563eb;
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 6px;
+}
+
+.btn-delete {
+    background: #dc2626;
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 6px;
+}
+
+.badge-status {
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: capitalize;
+}
+
+.badge-status.active { background:#d1fae5; color:#065f46; }
+.badge-status.pending { background:#fef3c7; color:#92400e; }
+.badge-status.suspended { background:#fee2e2; color:#991b1b; }
+
+.btn-update {
+    background: var(--mint-700);
+    padding: 10px 14px;
+    color: white;
+    border-radius: 8px;
+}
+
+.btn-back {
+    display: inline-block;
+    padding: 8px 14px;
+    background: #64748b;
+    color: white;
+    border-radius: 8px;
+}
