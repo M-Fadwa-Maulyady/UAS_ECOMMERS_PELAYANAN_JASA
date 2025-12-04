@@ -449,3 +449,170 @@ body {
     border: none !important;
 }
 
+/* Card */
+.seller-status-card {
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 18px;
+    border: 1px solid #e3ebe8;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.05);
+    display: flex;
+    gap: 14px;
+}
+
+/* Badge */
+.seller-badge {
+    background: #0D5C4A;
+    width: 55px;
+    height: 55px;
+    border-radius: 14px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+}
+
+/* Progress Section */
+.progress-wrapper {
+    margin-bottom: 15px;
+}
+
+.progress-label {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #0D5C4A;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 10px;
+    background: #e2f1ed;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 6px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: #0D5C4A;
+    border-radius: 10px;
+    transition: width .4s ease;
+}
+
+.progress-small {
+    font-size: 12px;
+    color: #6b7280;
+    margin-bottom: 12px;
+}
+
+/* Checklist */
+.seller-checklist li {
+    margin-bottom: 8px;
+}
+
+.seller-checklist li.done {
+    color: #0D5C4A;
+    font-weight: 600;
+}
+
+/* Buttons */
+.btn-verify,
+.btn-open-shop {
+    width: 100%;
+    padding: 10px;
+    background: #0D5C4A;
+    color: white;
+    border-radius: 12px;
+    font-weight: 600;
+    border: none;
+    text-align: center;
+    transition: .2s;
+}
+
+.btn-verify:hover,
+.btn-open-shop:hover {
+    background: #093e30;
+    transform: translateY(-2px);
+}
+
+.status-card-green {
+    background: #e8f7f2; 
+    border: 1px solid #c7e8dd;
+    border-radius: 14px;
+    padding: 16px;
+    margin-top: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.status-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.status-head .icon {
+    width: 40px;
+    height: 40px;
+    background: #0D5C4A;
+    color: white;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+
+.status-head .title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #0D5C4A;
+}
+
+.progress-container {
+    margin-bottom: 14px;
+}
+
+.progress-label {
+    font-size: 13px;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #0D5C4A;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: #dff1ea;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-bar .fill {
+    height: 100%;
+    background: #0D5C4A;
+    border-radius: 10px;
+    transition: width .3s;
+}
+
+.status-btn-green {
+    display: block;
+    width: 100%;
+    background: #0D5C4A;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: .3s;
+}
+
+.status-btn-green:hover {
+    background: #094031;
+    transform: translateY(-2px);
+}
+
+

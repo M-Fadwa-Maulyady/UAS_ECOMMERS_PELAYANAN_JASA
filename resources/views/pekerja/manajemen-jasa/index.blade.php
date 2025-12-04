@@ -1,106 +1,218 @@
 <x-layoutJasa>
 
-    <div class="container mx-auto mt-6">
+<style>
+    /* ===== Container ===== */
+    .kategori-container {
+        background: #fff;
+        padding: 22px;
+        border-radius: 16px;
+        border: 1px solid #dfe7e4;
+        box-shadow: 0px 4px 14px rgba(0,0,0,0.05);
+    }
 
-        {{-- Header --}}
-        <div class="flex items-center justify-between mb-6">
-            <h2 class="text-2xl font-semibold text-gray-800">Data Jasa</h2>
+    /* ===== Header Title + Button ===== */
+    .header-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 18px;
+    }
 
-            <a href="{{ route('pekerja.manajemen-jasa.create') }}"
-                class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow flex items-center gap-2 transition">
-                <i class="fas fa-plus"></i>
-                Tambah Jasa
-            </a>
+    .header-section h3 {
+        font-size: 20px;
+        font-weight: 600;
+        margin: 0;
+    }
+
+    /* Button add */
+    .btn-kategori-add {
+        background: #0D5C4A;
+        padding: 10px 18px;
+        color: #fff;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 600;
+        transition: .2s;
+    }
+    .btn-kategori-add:hover {
+        background: #09402E;
+        transform: translateY(-2px);
+    }
+
+    /* ===== Table ===== */
+    .table-wrapper {
+        overflow-x: auto;
+    }
+
+    .kategori-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    /* Table Header */
+    .kategori-table thead {
+        background: #0D5C4A;
+    }
+    .kategori-table th {
+        color: white;
+        padding: 14px;
+        text-align: left;
+        font-weight: 600;
+        letter-spacing: .3px;
+    }
+
+    /* Table Body */
+    .kategori-table td {
+        padding: 14px 12px;
+        border-bottom: 1px solid #e6ece9;
+    }
+
+    /* Hover Effect */
+    .kategori-table tbody tr:hover {
+        background: #E8F8F2;
+    }
+
+    /* Empty Row */
+    .empty-state td {
+        text-align: center;
+        padding: 18px;
+        color: #6b7280;
+        font-style: italic;
+    }
+
+    /* ===== Buttons (Edit/Delete) ===== */
+    .action-btns {
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn-edit {
+        background: #2563eb;
+        color: white !important;
+        padding: 6px 12px;
+        border-radius: 6px;
+        transition: .2s;
+    }
+    .btn-edit:hover {
+        background: #1e40af;
+    }
+
+    .btn-delete {
+        background: #dc2626;
+        color: white !important;
+        padding: 6px 12px;
+        border-radius: 6px;
+        transition: .2s;
+    }
+    .btn-delete:hover {
+        background: #991b1b;
+    }
+</style>
+
+<div class="kategori-container">
+
+    {{-- Header --}}
+    <div class="header-section">
+        <h3>Manajemen Jasa</h3>
+
+        <a href="{{ route('pekerja.manajemen-jasa.create') }}" class="btn-kategori-add">
+            + Tambah Jasa
+        </a>
+    </div>
+
+    {{-- Flash Success --}}
+    @if (session('success'))
+        <div class="alert alert-success mb-3">
+            {{ session('success') }}
         </div>
+    @endif
 
-        {{-- Flash Success --}}
-        @if (session('success'))
-            <div class="mb-4 p-4 bg-green-100 text-green-800 rounded-lg shadow">
-                {{ session('success') }}
-            </div>
-        @endif
-
-        {{-- Card Container --}}
-        <div class="bg-white shadow-md rounded-lg overflow-hidden border">
-
-            {{-- Card Header --}}
-           
-
-           
-            {{-- Table --}}
-<div class="table-wrapper">
-    <table class="jasa-table">
-        <thead>
-            <tr>
-                <th>Gambar</th>
-                <th>Nama Jasa</th>
-                <th>Deskripsi</th>
-                <th>Estimasi</th>
-                <th>Harga</th>
-                <th>Revisi</th>
-                <th>Aksi</th>
-            </tr>
-        </thead>
-
-        <tbody>
-            @forelse($jasa as $j)
+    {{-- TABLE --}}
+    <div class="table-wrapper">
+        <table class="kategori-table">
+            <thead>
                 <tr>
+                    <th>Gambar</th>
+                    <th>Nama Jasa</th>
+                    <th>Deskripsi</th>
+                    <th>Estimasi</th>
+                    <th>Harga</th>
+                    <th>Kategori</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @forelse ($jasa as $j)
+                <tr>
+
+                    {{-- Gambar --}}
                     <td>
                         @if ($j->gambar)
-                            <img src="{{ asset('storage/' . $j->gambar) }}" alt="">
+                            <img src="{{ asset('storage/'.$j->gambar) }}"
+                                 style="width:55px; height:55px; border-radius:8px; object-fit:cover;">
                         @else
-                            <div class="noimg">
-                                <i class="fas fa-image"></i>
-                            </div>
+                            <span class="text-muted">-</span>
                         @endif
                     </td>
 
-                    <td class="nama">{{ $j->nama_jasa }}</td>
+                    {{-- Nama --}}
+                    <td>{{ $j->nama_jasa }}</td>
 
-                    <td class="deskripsi">
-                        {{ Str::limit($j->deskripsi, 120) }}
-                    </td>
+                    {{-- Deskripsi --}}
+                    <td>{{ Str::limit($j->deskripsi, 60) }}</td>
 
+                    {{-- Estimasi --}}
                     <td>{{ $j->estimasi_waktu }} hari</td>
 
-                    <td class="harga">
-                        Rp {{ number_format($j->harga, 0, ',', '.') }}
+                    {{-- Harga --}}
+                    <td>Rp {{ number_format($j->harga, 0, ',', '.') }}</td>
+
+                    {{-- Kategori --}}
+                    <td>
+                        @if($j->kategori)
+                            {{ $j->kategori->nama }}
+                        @else
+                            <span class="text-muted">-</span>
+                        @endif
                     </td>
 
-                    <td>{{ $j->jumlah_revisi }}x</td>
-
+                    {{-- Aksi --}}
                     <td>
-                        <div class="aksi">
-                            <a href="{{ route('pekerja.manajemen-jasa.edit', $j->id) }}" class="edit">
-                                <i class="fas fa-edit"></i>
+                        <div class="action-btns">
+
+                            <a href="{{ route('pekerja.manajemen-jasa.edit', $j->id) }}" 
+                               class="btn-edit">
+                                ✏ Edit
                             </a>
 
                             <form action="{{ route('pekerja.manajemen-jasa.delete', $j->id) }}"
-                                  method="POST"
-                                  onsubmit="return confirm('Yakin mau hapus jasa ini?')">
+                                  method="POST">
                                 @csrf
                                 @method('DELETE')
 
-                                <button class="hapus">
-                                    <i class="fas fa-trash"></i>
+                                <button onclick="return confirm('Hapus jasa ini?')"
+                                        class="btn-delete">
+                                    🗑 Hapus
                                 </button>
                             </form>
+
                         </div>
                     </td>
+
                 </tr>
-            @empty
-                <tr>
-                    <td colspan="7" class="kosong">Belum ada data jasa.</td>
+                @empty
+                <tr class="empty-state">
+                    <td colspan="7">Belum ada jasa.</td>
                 </tr>
-            @endforelse
-        </tbody>
-    </table>
-</div>
-
-
-
-        </div>
-
+                @endforelse
+            </tbody>
+        </table>
     </div>
+
+</div>
 
 </x-layoutJasa>

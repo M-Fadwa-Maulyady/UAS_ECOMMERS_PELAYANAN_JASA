@@ -7,8 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Jasa extends Model
 {
-    use HasFactory;
-
     protected $fillable = [
         'nama',
         'slug',
@@ -18,9 +16,14 @@ class Jasa extends Model
         'kontak',
         'gambar',
 
-        // untuk pekerja
         'nama_jasa',
         'estimasi_waktu',
-        'jumlah_revisi',
+        'kategori_id',
     ];
+
+    public function kategori()
+    {
+        return $this->belongsTo(Kategori::class);
+    }
 }
+

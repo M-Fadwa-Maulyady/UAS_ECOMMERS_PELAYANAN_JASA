@@ -3,22 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Models\Jasa;
+use App\Models\Kategori;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-
 
 class JasaController extends Controller
 {
     public function index()
     {
-        $jasa = Jasa::all();
+        $jasa = Jasa::with('kategori')->get(); // include kategori
         return view('pekerja.manajemen-jasa.index', compact('jasa'));
     }
 
     public function create()
     {
-        return view('pekerja.manajemen-jasa.create');
+        $kategoris = Kategori::all(); // ambil kategori
+        return view('pekerja.manajemen-jasa.create', compact('kategoris'));
     }
 
 
@@ -29,13 +30,13 @@ class JasaController extends Controller
             'deskripsi' => 'required',
             'estimasi_waktu' => 'required|integer',
             'harga' => 'required|integer',
-            'jumlah_revisi' => 'required|integer',
+            'kategori_id' => 'required|integer|exists:kategoris,id',
             'gambar' => 'nullable|image'
         ]);
 
         $data = $request->all();
 
-        // Mapping ke field publik
+        // mapping field publik
         $data['nama'] = $request->nama_jasa;
         $data['slug'] = Str::slug($request->nama_jasa) . '-' . Str::random(6);
 
@@ -51,12 +52,14 @@ class JasaController extends Controller
 
 
 
-
     public function edit($id)
     {
         $jasa = Jasa::findOrFail($id);
-        return view('pekerja.manajemen-jasa.edit', compact('jasa'));
+        $kategoris = Kategori::all(); // dikirim ke form edit
+        return view('pekerja.manajemen-jasa.edit', compact('jasa', 'kategoris'));
     }
+
+
 
     public function update(Request $request, $id)
     {
@@ -67,13 +70,13 @@ class JasaController extends Controller
             'deskripsi' => 'required',
             'estimasi_waktu' => 'required|integer',
             'harga' => 'required|integer',
-            'jumlah_revisi' => 'required|integer',
+            'kategori_id' => 'required|integer|exists:kategoris,id',
             'gambar' => 'nullable|image'
         ]);
 
         $data = $request->all();
 
-        // mapping ke field publik
+        // mapping field publik
         $data['nama'] = $request->nama_jasa;
         $data['slug'] = Str::slug($request->nama_jasa) . '-' . Str::random(6);
 
