@@ -6,13 +6,12 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('jasas', function (Blueprint $table) {
             $table->id();
+
+            // data umum
             $table->string('nama');
             $table->string('slug')->unique();
             $table->text('deskripsi');
@@ -20,13 +19,18 @@ return new class extends Migration
             $table->string('durasi')->nullable();
             $table->string('kontak')->nullable();
             $table->string('gambar')->nullable();
+
+            // data untuk pekerja
+            $table->string('nama_jasa')->nullable();
+            $table->integer('estimasi_waktu')->nullable();
+
+            // kategori
+            $table->unsignedBigInteger('kategori_id')->nullable();
+
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('jasas');

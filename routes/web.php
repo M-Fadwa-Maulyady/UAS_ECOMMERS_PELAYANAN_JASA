@@ -9,8 +9,8 @@ use App\Http\Controllers\LandingController;
 use App\Http\Controllers\ManajemenUserController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\ManajemenPekerjaController;
+use App\Http\Controllers\PekerjaStatusController;
 
-use App\Models\Jasa;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,19 +19,16 @@ use App\Models\Jasa;
 */
 
 Route::get('/', [LandingController::class, 'index'])->name('landing');
-// Halaman semua kategori
 Route::get('/kategori', [LandingController::class, 'index'])->name('kategori.all');
-
-// Halaman detail kategori (tampilkan jasa berdasarkan kategori)
 Route::get('/landing', [LandingController::class, 'index'])->name('landing.list');
 Route::get('/jasa/{slug}', [LandingController::class, 'show'])->name('jasa.show');
+
 
 /*
 |--------------------------------------------------------------------------
 | AUTH ROUTES
 |--------------------------------------------------------------------------
 */
-
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -39,23 +36,27 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
 Route::post('/register', [AuthController::class, 'register'])->name('register.post');
 
+
 /*
 |--------------------------------------------------------------------------
 | ADMIN ROUTES
 |--------------------------------------------------------------------------
 */
-
 Route::middleware(['auth', 'role:admin'])->group(function () {
+
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    Route::get('/data-anggota', [AnggotaController::class, 'index'])->name('dataAnggota');
-    Route::get('/anggota/create', [AnggotaController::class, 'create'])->name('createAnggota');
-    Route::post('/anggota/store', [AnggotaController::class, 'store'])->name('storeAnggota');
-    Route::get('/anggota/edit/{id}', [AnggotaController::class, 'edit'])->name('editAnggota');
-    Route::put('/anggota/update/{id}', [AnggotaController::class, 'update'])->name('updateAnggota');
-    Route::delete('/anggota/delete/{id}', [AnggotaController::class, 'destroy'])->name('deleteAnggota');
+    // Data Anggota
+    Route::resource('anggota', AnggotaController::class)->names([
+        'index'   => 'dataAnggota',
+        'create'  => 'createAnggota',
+        'store'   => 'storeAnggota',
+        'edit'    => 'editAnggota',
+        'update'  => 'updateAnggota',
+        'destroy' => 'deleteAnggota',
+    ]);
 
-
+    // Admin jasa
     Route::prefix('admin/jasa')->group(function () {
         Route::get('/', [JasaController::class, 'adminIndex'])->name('jasa.index');
         Route::get('/create', [JasaController::class, 'create'])->name('jasa.create');
@@ -65,35 +66,75 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::delete('/{id}', [JasaController::class, 'destroy'])->name('jasa.destroy');
     });
 
-    Route::resource('/manajemen-user', ManajemenUserController::class);
-
+    Route::resource('manajemen-user', ManajemenUserController::class);
     Route::resource('kategori', KategoriController::class);
 
-Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
-
-    Route::get('/pekerja', [ManajemenPekerjaController::class, 'index'])->name('pekerja.index');
-    Route::get('/pekerja/{id}', [ManajemenPekerjaController::class, 'show'])->name('pekerja.show');
-    Route::put('/pekerja/{id}/status', [ManajemenPekerjaController::class, 'updateStatus'])->name('pekerja.updateStatus');
-    Route::delete('/pekerja/{id}', [ManajemenPekerjaController::class, 'destroy'])->name('pekerja.delete');
-
-});
-
+    // Manajemen Pekerja
+    Route::prefix('admin')->group(function () {
+        Route::get('/pekerja', [ManajemenPekerjaController::class, 'index'])->name('pekerja.index');
+        Route::get('/pekerja/{id}', [ManajemenPekerjaController::class, 'show'])->name('pekerja.show');
+        Route::put('/pekerja/{id}/status', [ManajemenPekerjaController::class, 'updateStatus'])->name('pekerja.updateStatus');
+        Route::delete('/pekerja/{id}', [ManajemenPekerjaController::class, 'destroy'])->name('pekerja.delete');
+    });
 
 });
+
+
 
 /*
 |--------------------------------------------------------------------------
 | PEKERJA ROUTES
 |--------------------------------------------------------------------------
 */
+Route::middleware(['auth', 'role:pekerja'])
+    ->prefix('pekerja')
+    ->group(function () {
 
-Route::middleware(['auth', 'role:pekerja'])->group(function () {
+    // Dashboard
+    Route::get('/dashboard', fn() => view('pekerja.dashboard'))
+        ->name('pekerja.dashboard');
 
-    Route::get('/pekerja/dashboard', function () {
-        return view('pekerja.dashboard');
-    })->name('pekerja.dashboard');
+    /*
+    |--------------------------------------------------------------------------
+    | STATUS AKUN: KTP, PROFIL, REKENING
+    |--------------------------------------------------------------------------
+    */
 
-    Route::prefix('pekerja/manajemen-jasa')->group(function () {
+    // Status page
+    Route::get('/account/status', [PekerjaStatusController::class, 'index'])
+        ->name('pekerja.account.status');
+
+    // KTP
+    Route::get('/account/ktp', [PekerjaStatusController::class, 'ktpForm'])
+        ->name('pekerja.account.ktp');
+
+    Route::post('/account/ktp', [PekerjaStatusController::class, 'ktpUpload'])
+        ->name('pekerja.account.ktp.upload');
+
+    // Profil
+    Route::get('/account/profile', [PekerjaStatusController::class, 'profileForm'])
+        ->name('pekerja.account.profile');
+
+    Route::post('/account/profile', [PekerjaStatusController::class, 'profileUpdate'])
+        ->name('pekerja.account.profile.update');
+
+    // Rekening
+    Route::get('/account/rekening', [PekerjaStatusController::class, 'rekeningForm'])
+        ->name('pekerja.account.rekening');
+
+    Route::post('/account/rekening', [PekerjaStatusController::class, 'rekeningUpdate'])
+        ->name('pekerja.account.rekening.update');
+
+        Route::post('/account/submit-verification', 
+    [PekerjaStatusController::class, 'submitVerification']
+)->name('pekerja.account.submit');
+
+    /*
+    |--------------------------------------------------------------------------
+    | MANAJEMEN JASA
+    |--------------------------------------------------------------------------
+    */
+    Route::prefix('manajemen-jasa')->group(function () {
         Route::get('/', [JasaController::class, 'index'])->name('pekerja.manajemen-jasa.index');
         Route::get('/create', [JasaController::class, 'create'])->name('pekerja.manajemen-jasa.create');
         Route::post('/store', [JasaController::class, 'store'])->name('pekerja.manajemen-jasa.store');
@@ -101,4 +142,5 @@ Route::middleware(['auth', 'role:pekerja'])->group(function () {
         Route::put('/update/{id}', [JasaController::class, 'update'])->name('pekerja.manajemen-jasa.update');
         Route::delete('/delete/{id}', [JasaController::class, 'destroy'])->name('pekerja.manajemen-jasa.delete');
     });
+
 });
