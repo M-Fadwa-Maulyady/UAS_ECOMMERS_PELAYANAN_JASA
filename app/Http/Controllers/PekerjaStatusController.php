@@ -7,20 +7,11 @@ use Auth;
 
 class PekerjaStatusController extends Controller
 {
-    // ===============================
-    // HALAMAN STATUS PEKERJA
-    // ===============================
     public function index()
     {
         $user = Auth::user();
         return view('pekerja.account.status', compact('user'));
     }
-
-
-
-    // ===============================
-    // TAHAP 4 — UPLOAD KTP
-    // ===============================
 
     public function ktpForm()
     {
@@ -35,28 +26,17 @@ class PekerjaStatusController extends Controller
         ]);
 
         $user = Auth::user();
-
-        // Simpan file
         $path = $request->file('ktp')->store('ktp', 'public');
-
-        // Update database
         $user->ktp = $path;
         $user->save();
 
         return redirect()->route('pekerja.account.status')
-                        ->with('success', 'KTP berhasil diupload!');
+            ->with('success', 'KTP berhasil diupload!');
     }
 
-
-
-    // ===============================
-    // TAHAP 5 — LENGKAPI PROFIL
-    // ===============================
-
     public function profileForm()
-    {   
-        $user = Auth::user();
-        return view('pekerja.account.profile', compact('user'));
+    {
+        return view('pekerja.account.profile', ['user' => Auth::user()]);
     }
 
     public function profileUpdate(Request $request)
@@ -79,58 +59,52 @@ class PekerjaStatusController extends Controller
             'nama_usaha' => $request->nama_usaha,
             'kategori_jasa' => $request->kategori_jasa,
             'deskripsi_jasa' => $request->deskripsi_jasa,
-            'profile_filled' => true, // progress ✔
+            'profile_filled' => true,
         ]);
 
         return redirect()->route('pekerja.account.status')
-                        ->with('success', 'Profil berhasil diperbarui!');
+            ->with('success', 'Profil berhasil diperbarui!');
     }
 
     public function rekeningForm()
-{
-    $user = Auth::user();
-    return view('pekerja.account.rekening', compact('user'));
-}
-
-public function rekeningUpdate(Request $request)
-{
-    $request->validate([
-        'rekening_bank' => 'required',
-        'rekening_nama' => 'required',
-        'rekening_nomor' => 'required|numeric',
-    ]);
-
-    $user = Auth::user();
-
-    $user->update([
-        'rekening_bank' => $request->rekening_bank,
-        'rekening_nama' => $request->rekening_nama,
-        'rekening_nomor' => $request->rekening_nomor,
-        'rekening' => 1, // untuk checklist progress
-    ]);
-
-    return redirect()->route('pekerja.account.status')
-        ->with('success', 'Rekening bank berhasil disimpan!');
-}
-
-public function submitVerification()
-{
-    $user = Auth::user();
-
-    // Kalau belum lengkap, tolak
-    if (!$user->ktp || !$user->profile_filled || 
-        !$user->rekening_bank || !$user->rekening_nama || !$user->rekening_nomor) 
     {
-        return back()->with('error', 'Lengkapi semua persyaratan terlebih dahulu!');
+        return view('pekerja.account.rekening', ['user' => Auth::user()]);
     }
 
-    // Set status menjadi pending (2)
-    $user->is_verified_by_admin = 2; 
-    $user->save();
+    public function rekeningUpdate(Request $request)
+    {
+        $request->validate([
+            'rekening_bank' => 'required',
+            'rekening_nama' => 'required',
+            'rekening_nomor' => 'required|numeric',
+        ]);
 
-    return redirect()->route('pekerja.account.status')
-        ->with('success', 'Verifikasi berhasil diajukan! Admin akan memeriksa dokumenmu.');
-}
+        $user = Auth::user();
 
+        $user->update([
+            'rekening_bank' => $request->rekening_bank,
+            'rekening_nama' => $request->rekening_nama,
+            'rekening_nomor' => $request->rekening_nomor,
+        ]);
 
+        return redirect()->route('pekerja.account.status')
+            ->with('success', 'Rekening bank berhasil disimpan!');
+    }
+
+    public function submitVerification()
+    {
+        $user = Auth::user();
+
+        if (!$user->ktp || !$user->profile_filled || !$user->rekening_bank) {
+            return back()->with('error', 'Lengkapi semua persyaratan terlebih dahulu!');
+        }
+
+        // User mengirim permintaan → masih pending
+        $user->is_verified_by_admin = false;
+        $user->role = "user";
+        $user->save();
+
+        return redirect()->route('pekerja.account.status')
+            ->with('success', 'Permintaan verifikasi terkirim! Menunggu pemeriksaan admin.');
+    }
 }

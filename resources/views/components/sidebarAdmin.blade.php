@@ -24,10 +24,11 @@
             <i class="fas fa-tags"></i> Kategori Jasa
         </a>
 
-        <a href="{{ route('pekerja.index') }}" 
+        <a href="{{ route('admin.pekerja.index') }}" 
             class="{{ request()->is('admin/pekerja*') ? 'active' : '' }}">
             <i class="fas fa-user-tie"></i> Manajemen Pekerja
         </a>
+
 
         <a href="/admin/jasa">
             <i class="fas fa-briefcase"></i> Manajemen Jasa

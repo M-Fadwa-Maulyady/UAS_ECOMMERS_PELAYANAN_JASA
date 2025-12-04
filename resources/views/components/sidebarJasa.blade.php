@@ -73,6 +73,13 @@
         Lihat Detail Status
     </a>
 
+    <div class="pro-box">
+        <form action="{{ route('logout') }}" method="POST" class="logout-form">
+                @csrf
+                <button type="submit"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </form>
+    </div>
+
 </div>
 
 

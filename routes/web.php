@@ -69,13 +69,21 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::resource('manajemen-user', ManajemenUserController::class);
     Route::resource('kategori', KategoriController::class);
 
-    // Manajemen Pekerja
-    Route::prefix('admin')->group(function () {
-        Route::get('/pekerja', [ManajemenPekerjaController::class, 'index'])->name('pekerja.index');
-        Route::get('/pekerja/{id}', [ManajemenPekerjaController::class, 'show'])->name('pekerja.show');
-        Route::put('/pekerja/{id}/status', [ManajemenPekerjaController::class, 'updateStatus'])->name('pekerja.updateStatus');
-        Route::delete('/pekerja/{id}', [ManajemenPekerjaController::class, 'destroy'])->name('pekerja.delete');
-    });
+    Route::middleware(['auth'])->prefix('admin')->group(function () {
+
+    Route::get('/pekerja', [ManajemenPekerjaController::class, 'index'])
+        ->name('admin.pekerja.index');
+
+    Route::get('/pekerja/{id}', [ManajemenPekerjaController::class, 'show'])
+        ->name('admin.pekerja.show');
+
+    Route::post('/pekerja/{id}/update-status', [ManajemenPekerjaController::class, 'updateStatus'])
+        ->name('admin.pekerja.update-status');
+
+    Route::delete('/pekerja/{id}', [ManajemenPekerjaController::class, 'destroy'])
+        ->name('admin.pekerja.delete');
+});
+
 
 });
 
