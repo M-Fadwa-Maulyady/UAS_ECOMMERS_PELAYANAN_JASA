@@ -11,11 +11,17 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+
+        // ALIAS MIDDLEWARE WAJIB DIDAFTARKAN DI SINI (Laravel 11+)
         $middleware->alias([
-        'auth' => \App\Http\Middleware\Authenticate::class,
-        'role' => \App\Http\Middleware\RoleMiddleware::class, // <--- tambahkan ini
-    ]);
+            'auth' => \App\Http\Middleware\Authenticate::class,
+            'role' => \App\Http\Middleware\RoleMiddleware::class,
+
+            // >>> INI YANG PENTING <<<  
+            'verified.worker' => \App\Http\Middleware\VerifiedWorker::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
-    })->create();
+    })
+    ->create();

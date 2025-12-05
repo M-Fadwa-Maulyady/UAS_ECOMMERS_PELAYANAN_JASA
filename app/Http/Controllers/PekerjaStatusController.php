@@ -15,8 +15,7 @@ class PekerjaStatusController extends Controller
 
     public function ktpForm()
     {
-        $user = Auth::user();
-        return view('pekerja.account.ktp', compact('user'));
+        return view('pekerja.account.ktp', ['user' => Auth::user()]);
     }
 
     public function ktpUpload(Request $request)
@@ -27,6 +26,7 @@ class PekerjaStatusController extends Controller
 
         $user = Auth::user();
         $path = $request->file('ktp')->store('ktp', 'public');
+
         $user->ktp = $path;
         $user->save();
 
@@ -99,12 +99,15 @@ class PekerjaStatusController extends Controller
             return back()->with('error', 'Lengkapi semua persyaratan terlebih dahulu!');
         }
 
-        // User mengirim permintaan → masih pending
-        $user->is_verified_by_admin = false;
-        $user->role = "user";
+        // KIRIM PERMINTAAN VERIFIKASI
+        $user->is_verified_by_admin = false;   // tetap pending
+  $user->verification_note = null;
+      // reset alasan tolak
+        // ROLE TIDAK DIUBAH
+
         $user->save();
 
         return redirect()->route('pekerja.account.status')
-            ->with('success', 'Permintaan verifikasi terkirim! Menunggu pemeriksaan admin.');
+            ->with('success', 'Permintaan verifikasi berhasil dikirim! Menunggu pemeriksaan admin.');
     }
 }
