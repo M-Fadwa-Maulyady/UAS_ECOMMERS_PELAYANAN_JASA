@@ -188,60 +188,54 @@
     </div>
 
     {{-- STATE --}}
-    @if(!$user->is_verified_by_admin)
+    {{-- BELUM DIAJUKAN / PENDING --}}
+@if($user->is_verified_by_admin == 0)
 
-        <div class="state-box">
-            ⚠ Akun kamu belum diverifikasi admin.  
-            Lengkapi semua persyaratan untuk mulai berjualan.
-        </div>
+    <div class="state-box">
+        ⚠ Akun kamu belum diverifikasi admin.
+        Lengkapi semua persyaratan untuk mulai berjualan.
+    </div>
 
-        <ul class="checklist">
+    {{-- ... checklist + tombol ajukan --}}
+    @include('pekerja.account.partials.checklist')
 
-            <li class="{{ $user->ktp ? 'done' : '' }}">
-                <i class="fa-solid fa-id-card"></i>
-                <a href="{{ route('pekerja.account.ktp') }}">Upload KTP</a>
-            </li>
-
-            <li class="{{ $user->profile_filled ? 'done' : '' }}">
-                <i class="fa-solid fa-user-check"></i>
-                <a href="{{ route('pekerja.account.profile') }}">Lengkapi Profil</a>
-            </li>
-
-            <li class="{{ ($user->rekening_bank && $user->rekening_nama && $user->rekening_nomor) ? 'done' : '' }}">
-                <i class="fa-solid fa-building-columns"></i>
-                <a href="{{ route('pekerja.account.rekening') }}">Tambah Rekening</a>
-            </li>
-
-        </ul>
-
-      <form action="{{ route('pekerja.account.submit') }}" method="POST">
-    @csrf
-    <button type="submit" class="btn-verify">
-        Ajukan Verifikasi
-    </button>
-</form>
+    <form action="{{ route('pekerja.account.submit') }}" method="POST">
+        @csrf
+        <button type="submit" class="btn-verify">Ajukan Verifikasi</button>
+    </form>
 
 
+{{-- DITOLAK --}}
+@elseif($user->is_verified_by_admin == 2)
 
-    @elseif($user->is_verified_by_admin && !$user->is_pro_active)
+    <div class="state-box state-pending" style="border-left-color:#dc2626; color:#7f1d1d;">
+        ❌ Verifikasi ditolak Admin.
+        <br><strong>Alasan:</strong> {{ $user->verification_note }}
+        <br><br>Silahkan perbaiki dan ajukan ulang.
+    </div>
 
-        <div class="state-box state-pending">
-            ⏳ Dokumen kamu sudah diajukan.  
-            Sedang menunggu persetujuan admin.
-        </div>
+    @include('pekerja.account.partials.checklist')
 
-    @else
+    <form action="{{ route('pekerja.account.submit') }}" method="POST">
+        @csrf
+        <button type="submit" class="btn-verify">Ajukan Ulang</button>
+    </form>
 
-        <div class="state-box state-approved">
-            ✔ Akun kamu sudah diverifikasi admin!  
-            Kamu sudah bisa mulai berjualan 🎉
-        </div>
 
-        <a href="{{ route('pekerja.manajemen-jasa.index') }}" class="btn-open">
-            Mulai Jualan
-        </a>
+{{-- DISETUJUI --}}
+@elseif($user->is_verified_by_admin == 1)
 
-    @endif
+    <div class="state-box state-approved">
+        ✔ Akun kamu sudah diverifikasi admin!
+        Kamu sudah bisa mulai berjualan 🎉
+    </div>
+
+    <a href="{{ route('pekerja.manajemen-jasa.index') }}" class="btn-open">
+        Mulai Jualan
+    </a>
+
+@endif
+
 
 </div>
 

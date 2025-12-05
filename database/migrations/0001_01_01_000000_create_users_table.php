@@ -16,8 +16,8 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
 
-            // Role user
-            $table->enum('role', ['admin','user','pekerja'])->default('user');
+            // Role
+            $table->enum('role', ['admin', 'user', 'pekerja'])->default('user');
 
             // Profil dasar
             $table->string('alamat')->nullable();
@@ -28,10 +28,17 @@ return new class extends Migration
             $table->string('kategori_jasa')->nullable();
             $table->text('deskripsi_jasa')->nullable();
 
-            // Status verifikasi
+            // Verifikasi admin
             $table->string('ktp')->nullable();
             $table->boolean('profile_filled')->default(false);
-            $table->boolean('is_verified_by_admin')->default(false);  // hanya 1 kali
+
+            // 0 = pending, 1 = approved, 2 = rejected
+            $table->tinyInteger('is_verified_by_admin')->default(0);
+
+            // alasan penolakan admin
+            $table->text('verification_note')->nullable();
+
+            // fitur pro (opsional)
             $table->boolean('is_pro_active')->default(false);
 
             // Rekening
@@ -42,30 +49,10 @@ return new class extends Migration
             $table->rememberToken();
             $table->timestamps();
         });
-
-        // Table sessions
-        Schema::create('sessions', function (Blueprint $table) {
-            $table->string('id')->primary();
-            $table->foreignId('user_id')->nullable()->index();
-            $table->string('ip_address', 45)->nullable();
-            $table->text('user_agent')->nullable();
-            $table->longText('payload');
-            $table->integer('last_activity')->index();
-        });
-
-        // Forgot password
-        Schema::create('password_reset_tokens', function (Blueprint $table) {
-            $table->string('email')->primary();
-            $table->string('token');
-            $table->timestamp('created_at')->nullable();
-        });
     }
-
 
     public function down(): void
     {
-        Schema::dropIfExists('sessions');
-        Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('users');
     }
 };

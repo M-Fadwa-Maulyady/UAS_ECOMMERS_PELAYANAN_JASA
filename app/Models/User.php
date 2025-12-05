@@ -11,24 +11,36 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     protected $fillable = [
-    'name',
-    'email',
-    'password',
-    'alamat',
-    'no_telp',
-    'role',
-    'nama_usaha',
-    'kategori_jasa',
-    'deskripsi_jasa',
+        'name',
+        'email',
+        'password',
 
-    // Tambahan
-    'ktp',
-    'profile_filled',
-    'rekening_bank',
-    'rekening_nama',
-    'rekening_nomor',
-];
+        // Profil dasar
+        'alamat',
+        'no_telp',
 
+        // Role
+        'role',
+
+        // Profil pekerja
+        'nama_usaha',
+        'kategori_jasa',
+        'deskripsi_jasa',
+
+        // Verifikasi
+        'ktp',
+        'profile_filled',
+        'is_verified_by_admin',      // 0 = pending, 1 = approved, 2 = ditolak
+        'verification_note',         // alasan penolakan
+
+        // Rekening
+        'rekening_bank',
+        'rekening_nama',
+        'rekening_nomor',
+
+        // Pro fitur
+        'is_pro_active',
+    ];
 
     protected $hidden = [
         'password',
@@ -36,10 +48,10 @@ class User extends Authenticatable
     ];
 
     protected $casts = [
-        'email_verified_at' => 'datetime',
-        'profile_filled' => 'boolean',
-        'is_verified_by_admin' => 'boolean',
-        'is_pro_active' => 'boolean',
-        'password' => 'hashed',
+        'email_verified_at'   => 'datetime',
+        'profile_filled'      => 'boolean',
+        'is_verified_by_admin'=> 'integer',
+        'is_pro_active'       => 'boolean',
+        'password'            => 'hashed',
     ];
 }
