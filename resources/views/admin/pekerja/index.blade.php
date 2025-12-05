@@ -1,8 +1,8 @@
-    <x-layoutAdmin :title="$title">
+<x-layoutAdmin :title="$title">
 
-    <link rel="stylesheet" href="{{ asset('css/admin_pekerja.css') }}">
+<link rel="stylesheet" href="{{ asset('css/admin_pekerja.css') }}">
 
-    <style>
+<style>
     .table-custom {
         width: 100%;
         border-collapse: separate;
@@ -43,14 +43,24 @@
         display: inline-block;
     }
 
-    .verified {
-        background: #d1fae5;
-        color: #065f46;
-    }
-
-    .pending {
+    .badge-wait {
         background: #fff3cd;
         color: #946200;
+    }
+
+    .badge-submitted {
+        background: #cfe2ff;
+        color: #084298;
+    }
+
+    .badge-rejected {
+        background: #fde2e1;
+        color: #b42318;
+    }
+
+    .badge-approved {
+        background: #d1fae5;
+        color: #065f46;
     }
 
     .table-actions {
@@ -89,14 +99,41 @@
         font-size: 15px;
         color: #777;
     }
-    </style>
 
-    <div class="card p-4">
+    .modal-btn-cancel {
+        background: #e5e7eb;
+        color: #374151;
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-weight: 600;
+        border: none;
+    }
 
-        <h4 class="mb-3 fw-bold">Manajemen Pekerja</h4>
+    .modal-btn-cancel:hover {
+        background: #d1d5db;
+    }
 
-        <table class="table-custom user-table">
-            <thead>
+    .modal-btn-danger {
+        background: #e53935;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-weight: 600;
+        border: none;
+    }
+
+    .modal-btn-danger:hover {
+        background: #c62828;
+    }
+</style>
+
+
+<div class="card p-4">
+
+    <h4 class="mb-3 fw-bold">Manajemen Pekerja</h4>
+
+    <table class="table-custom user-table">
+        <thead>
             <tr>
                 <th width="60">No</th>
                 <th width="200">Nama</th>
@@ -104,49 +141,59 @@
                 <th width="150">Status</th>
                 <th width="200">Aksi</th>
             </tr>
-            </thead>
+        </thead>
 
-            <tbody>
+        <tbody>
 @forelse($workers as $key => $worker)
     <tr>
-        <td>{{ $key+1 }}</td>
+        <td>{{ $key + 1 }}</td>
         <td>{{ $worker->name }}</td>
         <td>{{ $worker->email }}</td>
 
         <td>
-            @if($worker->is_verified_by_admin)
-                <span class="badge-status verified">✔ Terverifikasi</span>
-            @else
-                <span class="badge-status pending">⏳ Menunggu Verifikasi</span>
+            {{-- STATUS ADMIN --}}
+            @if($worker->is_verified_by_admin == 0)
+                <span class="badge-status badge-wait">Belum Mengajukan</span>
+
+            @elseif($worker->is_verified_by_admin == 3)
+                <span class="badge-status badge-submitted">Menunggu Verifikasi Admin</span>
+
+            @elseif($worker->is_verified_by_admin == 1)
+                <span class="badge-status badge-approved">✔ Terverifikasi</span>
+
+            @elseif($worker->is_verified_by_admin == 2)
+                <span class="badge-status badge-rejected">❌ Ditolak</span>
             @endif
         </td>
 
         <td>
             <div class="table-actions">
 
-                {{-- Detail --}}
+                {{-- DETAIL --}}
                 <a href="{{ route('admin.pekerja.show', $worker->id) }}" class="btn-view">Detail</a>
 
-                {{-- APPROVE --}}
-                @if(!$worker->is_verified_by_admin && $worker->ktp && $worker->profile_filled)
+                {{-- APPROVE & REJECT --}}
+                @if($worker->is_verified_by_admin == 3)
+
+                    {{-- APPROVE BUTTON --}}
                     <form action="{{ route('admin.pekerja.update-status', $worker->id) }}" method="POST">
                         @csrf
                         <input type="hidden" name="status" value="approved">
-                        <button class="btn-approve">Approve</button>
+                        <button class="btn-approve">Setujui</button>
                     </form>
 
-                    {{-- BUTTON TOLAK --}}
-                    <button type="button" 
+                    {{-- REJECT BUTTON --}}
+                    <button type="button"
                         class="btn-delete"
                         onclick="openRejectModal({{ $worker->id }})">
                         Tolak
                     </button>
 
-                @elseif(!$worker->is_verified_by_admin)
-                    <span style="font-size:12px; color:#777;">❌ Belum lengkap</span>
+                @elseif($worker->is_verified_by_admin == 0)
+                    <span style="font-size:13px; color:#777;">❌ Belum Mengajukan</span>
                 @endif
 
-                {{-- Delete --}}
+                {{-- DELETE USER --}}
                 <form action="{{ route('admin.pekerja.delete', $worker->id) }}" method="POST">
                     @csrf @method('DELETE')
                     <button onclick="return confirm('Hapus pekerja ini?')" class="btn-delete">Hapus</button>
@@ -157,13 +204,15 @@
     </tr>
 @empty
     <tr>
-        <td colspan="5" class="empty">Belum ada pekerja menunggu verifikasi</td>
+        <td colspan="5" class="empty">Belum ada pekerja yang terdaftar</td>
     </tr>
 @endforelse
-</tbody>
+        </tbody>
+    </table>
+
+</div>
 
 
-    </div>
 <!-- MODAL PENOLAKAN -->
 <div id="rejectModal" style="
     display:none;
@@ -180,14 +229,17 @@
             @csrf
             <input type="hidden" name="status" value="rejected">
 
-            <textarea name="reject_reason" rows="4" class="form-control" required
+            <textarea name="verification_note" rows="4" class="form-control" required
                 placeholder="Tuliskan alasan penolakan..."></textarea>
 
             <div class="mt-3 d-flex justify-content-end">
-                <button type="button" onclick="closeRejectModal()" class="btn btn-secondary me-2">
+                <button type="button"
+                    onclick="closeRejectModal()"
+                    class="modal-btn-cancel me-2">
                     Batal
                 </button>
-                <button type="submit" class="btn btn-danger">
+
+                <button type="submit" class="modal-btn-danger">
                     Kirim Penolakan
                 </button>
             </div>
@@ -199,7 +251,6 @@
 function openRejectModal(id) {
     document.getElementById('rejectModal').style.display = 'block';
 
-    // Ubah action form sesuai ID pekerja
     document.getElementById('rejectForm').action =
         '/admin/pekerja/' + id + '/update-status';
 }
@@ -209,4 +260,4 @@ function closeRejectModal() {
 }
 </script>
 
-    </x-layoutAdmin>
+</x-layoutAdmin>

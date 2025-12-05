@@ -92,22 +92,21 @@ class PekerjaStatusController extends Controller
     }
 
     public function submitVerification()
-    {
-        $user = Auth::user();
+{
+    $user = Auth::user();
 
-        if (!$user->ktp || !$user->profile_filled || !$user->rekening_bank) {
-            return back()->with('error', 'Lengkapi semua persyaratan terlebih dahulu!');
-        }
-
-        // KIRIM PERMINTAAN VERIFIKASI
-        $user->is_verified_by_admin = false;   // tetap pending
-  $user->verification_note = null;
-      // reset alasan tolak
-        // ROLE TIDAK DIUBAH
-
-        $user->save();
-
-        return redirect()->route('pekerja.account.status')
-            ->with('success', 'Permintaan verifikasi berhasil dikirim! Menunggu pemeriksaan admin.');
+    if (!$user->ktp || !$user->profile_filled || !$user->rekening_bank) {
+        return back()->with('error', 'Lengkapi semua persyaratan terlebih dahulu!');
     }
+
+    // Status 3 = Sudah ajukan, menunggu admin
+    $user->is_verified_by_admin = 3;
+    $user->verification_note = null;
+    $user->save();
+
+    return redirect()->route('pekerja.account.status')
+        ->with('success', 'Permintaan verifikasi berhasil dikirim! Menunggu pemeriksaan admin.');
+}
+
+
 }
