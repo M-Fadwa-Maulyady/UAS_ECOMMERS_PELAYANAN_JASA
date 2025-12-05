@@ -35,13 +35,14 @@ Route::post('/register', [AuthController::class, 'register'])->name('register.po
 
 /*
 |--------------------------------------------------------------------------
-| ADMIN ROUTES
+| ADMIN AREA
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'role:admin'])->group(function () {
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+    /* Manajemen anggota */
     Route::resource('anggota', AnggotaController::class)->names([
         'index' => 'dataAnggota',
         'create' => 'createAnggota',
@@ -51,7 +52,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         'destroy' => 'deleteAnggota',
     ]);
 
-    Route::prefix('admin/jasa')->group(function () {
+    /* Manajemen jasa oleh admin */
+    Route::prefix('jasa')->group(function () {
         Route::get('/', [JasaController::class, 'adminIndex'])->name('jasa.index');
         Route::get('/create', [JasaController::class, 'create'])->name('jasa.create');
         Route::post('/', [JasaController::class, 'store'])->name('jasa.store');
@@ -63,58 +65,63 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::resource('manajemen-user', ManajemenUserController::class);
     Route::resource('kategori', KategoriController::class);
 
-    Route::prefix('admin')->group(function () {
-        Route::get('/pekerja', [ManajemenPekerjaController::class, 'index'])->name('admin.pekerja.index');
-        Route::get('/pekerja/{id}', [ManajemenPekerjaController::class, 'show'])->name('admin.pekerja.show');
-        Route::post('/pekerja/{id}/update-status', [ManajemenPekerjaController::class, 'updateStatus'])->name('admin.pekerja.update-status');
-        Route::delete('/pekerja/{id}', [ManajemenPekerjaController::class, 'destroy'])->name('admin.pekerja.delete');
-    });
+    /* Manajemen pekerja */
+    Route::get('/pekerja', [ManajemenPekerjaController::class, 'index'])->name('admin.pekerja.index');
+    Route::get('/pekerja/{id}', [ManajemenPekerjaController::class, 'show'])->name('admin.pekerja.show');
+    Route::post('/pekerja/{id}/update-status', [ManajemenPekerjaController::class, 'updateStatus'])->name('admin.pekerja.update-status');
+    Route::delete('/pekerja/{id}', [ManajemenPekerjaController::class, 'destroy'])->name('admin.pekerja.delete');
+
 });
 
 /*
 |--------------------------------------------------------------------------
-| PEKERJA ROUTES
+| PEKERJA AREA
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'role:pekerja'])
     ->prefix('pekerja')
     ->group(function () {
 
-    // Dashboard pekerja (TIDAK memakai verified.worker)
-    Route::get('/dashboard', fn() => view('pekerja.dashboard'))->name('pekerja.dashboard');
+        // Dashboard pekerja
+        Route::get('/dashboard', fn() =>
+            view('pekerja.dashboard')
+        )->name('pekerja.dashboard');
 
-    /*
-    |--------------------------------------------------------------------------
-    | ROUTE YANG BOLEH DIAKSES SEBELUM DIVERIFIKASI ADMIN
-    |--------------------------------------------------------------------------
-    */
-    Route::get('/account/status', [PekerjaStatusController::class, 'index'])->name('pekerja.account.status');
+        /*
+        |--------------------------------------------------------------------------
+        | ROUTE YANG BOLEH DIAKSES SEBELUM DIVERIFIKASI ADMIN
+        |--------------------------------------------------------------------------
+        */
+        Route::get('/account/status', [PekerjaStatusController::class, 'index'])->name('pekerja.account.status');
 
-    Route::get('/account/ktp', [PekerjaStatusController::class, 'ktpForm'])->name('pekerja.account.ktp');
-    Route::post('/account/ktp', [PekerjaStatusController::class, 'ktpUpload'])->name('pekerja.account.ktp.upload');
+        Route::get('/account/ktp', [PekerjaStatusController::class, 'ktpForm'])->name('pekerja.account.ktp');
+        Route::post('/account/ktp', [PekerjaStatusController::class, 'ktpUpload'])->name('pekerja.account.ktp.upload');
 
-    Route::get('/account/profile', [PekerjaStatusController::class, 'profileForm'])->name('pekerja.account.profile');
-    Route::post('/account/profile', [PekerjaStatusController::class, 'profileUpdate'])->name('pekerja.account.profile.update');
+        Route::get('/account/profile', [PekerjaStatusController::class, 'profileForm'])->name('pekerja.account.profile');
+        Route::post('/account/profile', [PekerjaStatusController::class, 'profileUpdate'])->name('pekerja.account.profile.update');
 
-    Route::get('/account/rekening', [PekerjaStatusController::class, 'rekeningForm'])->name('pekerja.account.rekening');
-    Route::post('/account/rekening', [PekerjaStatusController::class, 'rekeningUpdate'])->name('pekerja.account.rekening.update');
+        Route::get('/account/rekening', [PekerjaStatusController::class, 'rekeningForm'])->name('pekerja.account.rekening');
+        Route::post('/account/rekening', [PekerjaStatusController::class, 'rekeningUpdate'])->name('pekerja.account.rekening.update');
 
-    // Tombol "Ajukan Verifikasi"
-    Route::post('/account/submit-verification', [PekerjaStatusController::class, 'submitVerification'])
-        ->name('pekerja.account.submit');
+        // Ajukan verifikasi
+        Route::post('/account/submit-verification', [PekerjaStatusController::class, 'submitVerification'])
+            ->name('pekerja.account.submit');
 
-    /*
-    |--------------------------------------------------------------------------
-    | ROUTE YANG WAJIB PEKERJA SUDAH DIVERIFIKASI ADMIN
-    |--------------------------------------------------------------------------
-    */
-    Route::middleware(['verified.worker'])->prefix('manajemen-jasa')->group(function () {
-        Route::get('/', [JasaController::class, 'index'])->name('pekerja.manajemen-jasa.index');
-        Route::get('/create', [JasaController::class, 'create'])->name('pekerja.manajemen-jasa.create');
-        Route::post('/store', [JasaController::class, 'store'])->name('pekerja.manajemen-jasa.store');
-        Route::get('/edit/{id}', [JasaController::class, 'edit'])->name('pekerja.manajemen-jasa.edit');
-        Route::put('/update/{id}', [JasaController::class, 'update'])->name('pekerja.manajemen-jasa.update');
-        Route::delete('/delete/{id}', [JasaController::class, 'destroy'])->name('pekerja.manajemen-jasa.delete');
-    });
+        /*
+        |--------------------------------------------------------------------------
+        | ROUTE YANG WAJIB PEKERJA SUDAH DIVERIFIKASI ADMIN
+        |--------------------------------------------------------------------------
+        */
+        Route::middleware(['verified.worker'])
+            ->prefix('manajemen-jasa')
+            ->group(function () {
+
+                Route::get('/', [JasaController::class, 'index'])->name('pekerja.manajemen-jasa.index');
+                Route::get('/create', [JasaController::class, 'create'])->name('pekerja.manajemen-jasa.create');
+                Route::post('/store', [JasaController::class, 'store'])->name('pekerja.manajemen-jasa.store');
+                Route::get('/edit/{id}', [JasaController::class, 'edit'])->name('pekerja.manajemen-jasa.edit');
+                Route::put('/update/{id}', [JasaController::class, 'update'])->name('pekerja.manajemen-jasa.update');
+                Route::delete('/delete/{id}', [JasaController::class, 'destroy'])->name('pekerja.manajemen-jasa.delete');
+            });
 
 });

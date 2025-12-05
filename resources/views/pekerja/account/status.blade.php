@@ -161,7 +161,6 @@
     if ($user->ktp) $progress += 33;
     if ($user->profile_filled) $progress += 33;
 
-    // Rekening lengkap jika 3 kolom terisi
     if ($user->rekening_bank && $user->rekening_nama && $user->rekening_nomor) {
         $progress += 34;
     }
@@ -187,8 +186,9 @@
         </div>
     </div>
 
-    {{-- STATE --}}
-    {{-- BELUM DIAJUKAN / PENDING --}}
+    {{-- ===========================
+         STATUS 0 — BELUM DIAJUKAN
+       =========================== --}}
 @if($user->is_verified_by_admin == 0)
 
     <div class="state-box">
@@ -196,7 +196,6 @@
         Lengkapi semua persyaratan untuk mulai berjualan.
     </div>
 
-    {{-- ... checklist + tombol ajukan --}}
     @include('pekerja.account.partials.checklist')
 
     <form action="{{ route('pekerja.account.submit') }}" method="POST">
@@ -205,7 +204,22 @@
     </form>
 
 
-{{-- DITOLAK --}}
+    {{-- ===========================
+         STATUS 3 — SEDANG MENUNGGU ADMIN
+       =========================== --}}
+@elseif($user->is_verified_by_admin == 3)
+
+    <div class="state-box state-pending">
+        ⏳ Pengajuan berhasil!
+        <br>Menunggu persetujuan admin.
+    </div>
+
+    @include('pekerja.account.partials.checklist')
+
+
+    {{-- ===========================
+         STATUS 2 — DITOLAK ADMIN
+       =========================== --}}
 @elseif($user->is_verified_by_admin == 2)
 
     <div class="state-box state-pending" style="border-left-color:#dc2626; color:#7f1d1d;">
@@ -222,7 +236,9 @@
     </form>
 
 
-{{-- DISETUJUI --}}
+    {{-- ===========================
+         STATUS 1 — DISETUJUI ADMIN
+       =========================== --}}
 @elseif($user->is_verified_by_admin == 1)
 
     <div class="state-box state-approved">
@@ -235,7 +251,6 @@
     </a>
 
 @endif
-
 
 </div>
 

@@ -11,8 +11,8 @@ class ManajemenPekerjaController extends Controller
     {
         $title = "Manajemen Pekerja";
 
-        $workers = User::whereNotNull('ktp')
-            ->where('profile_filled', true)
+        // tampilkan semua pekerja sesuai role, urutkan berdasarkan status verifikasi
+        $workers = User::where('role', 'pekerja')
             ->orderBy('is_verified_by_admin', 'asc')
             ->get();
 
@@ -28,31 +28,29 @@ class ManajemenPekerjaController extends Controller
     }
 
     public function updateStatus(Request $request, $id)
-{
-    $worker = User::findOrFail($id);
+    {
+        $worker = User::findOrFail($id);
 
-    if ($request->status === "approved") {
-        // APPROVE
-        $worker->role = "pekerja";
-        $worker->is_verified_by_admin = 1;
-        $worker->verification_note = null;  // reset alasan tolak
-    } 
-    elseif ($request->status === "rejected") {
+        if ($request->status === "approved") {
 
-        $request->validate([
-            'verification_note' => 'required|string'
-        ]);
+            $worker->is_verified_by_admin = 1;
+            $worker->verification_note = null;
 
-        $worker->is_verified_by_admin = 2; // status ditolak
-        $worker->verification_note = $request->verification_note;
+        } elseif ($request->status === "rejected") {
+
+            $request->validate([
+                'verification_note' => 'required|string'
+            ]);
+
+            $worker->is_verified_by_admin = 2;
+            $worker->verification_note = $request->verification_note;
+        }
+
+        $worker->save();
+
+        return redirect()->route('admin.pekerja.index')
+            ->with('success', 'Status pekerja berhasil diperbarui.');
     }
-
-    $worker->save();
-
-    return redirect()->route('admin.pekerja.index')
-        ->with('success', 'Status pekerja berhasil diperbarui.');
-}
-
 
     public function destroy($id)
     {
