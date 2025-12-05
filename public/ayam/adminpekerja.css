@@ -48,3 +48,40 @@
     color: white;
     border-radius: 8px;
 }
+
+.badge-status {
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.badge-status.verified {
+    background: #d1fae5;
+    color: #047857;
+}
+
+.badge-status.pending {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.btn-update {
+    background: #2563eb;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-back {
+    display: inline-block;
+    background: #e5e7eb;
+    padding: 8px 14px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #374151;
+}
+
+
