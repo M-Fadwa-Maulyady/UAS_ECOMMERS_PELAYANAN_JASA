@@ -38,11 +38,13 @@ Route::post('/register', [AuthController::class, 'register'])->name('register.po
 | ADMIN AREA
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
+Route::middleware(['auth', 'role:admin'])
+    ->prefix('admin')
+    ->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    /* Manajemen anggota */
+    /* MANEJEMEN ANGGOTA */
     Route::resource('anggota', AnggotaController::class)->names([
         'index' => 'dataAnggota',
         'create' => 'createAnggota',
@@ -52,25 +54,46 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
         'destroy' => 'deleteAnggota',
     ]);
 
-    /* Manajemen jasa oleh admin */
-    Route::prefix('jasa')->group(function () {
-        Route::get('/', [JasaController::class, 'adminIndex'])->name('jasa.index');
-        Route::get('/create', [JasaController::class, 'create'])->name('jasa.create');
-        Route::post('/', [JasaController::class, 'store'])->name('jasa.store');
-        Route::get('/{id}/edit', [JasaController::class, 'edit'])->name('jasa.edit');
-        Route::put('/{id}', [JasaController::class, 'update'])->name('jasa.update');
-        Route::delete('/{id}', [JasaController::class, 'destroy'])->name('jasa.destroy');
-    });
-
+    /* MANAJEMEN USER & KATEGORI */
     Route::resource('manajemen-user', ManajemenUserController::class);
     Route::resource('kategori', KategoriController::class);
 
-    /* Manajemen pekerja */
-    Route::get('/pekerja', [ManajemenPekerjaController::class, 'index'])->name('admin.pekerja.index');
-    Route::get('/pekerja/{id}', [ManajemenPekerjaController::class, 'show'])->name('admin.pekerja.show');
-    Route::post('/pekerja/{id}/update-status', [ManajemenPekerjaController::class, 'updateStatus'])->name('admin.pekerja.update-status');
-    Route::delete('/pekerja/{id}', [ManajemenPekerjaController::class, 'destroy'])->name('admin.pekerja.delete');
+    /*
+    |--------------------------------------------------------------------------
+    | ADMIN MANAJEMEN JASA (Pekerja submit → Admin approve/reject)
+    |--------------------------------------------------------------------------
+    */
+    Route::prefix('jasa')->group(function () {
 
+        Route::get('/', [JasaController::class, 'adminIndex'])
+            ->name('admin.jasa.index');
+
+        Route::get('/{id}/detail', [JasaController::class, 'adminDetail'])
+            ->name('admin.jasa.detail');
+
+        Route::post('/{id}/approve', [JasaController::class, 'approve'])
+            ->name('admin.jasa.approve');
+
+        Route::post('/{id}/reject', [JasaController::class, 'reject'])
+            ->name('admin.jasa.reject');
+    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | ADMIN MANAJEMEN PEKERJA
+    |--------------------------------------------------------------------------
+    */
+    Route::get('/pekerja', [ManajemenPekerjaController::class, 'index'])
+        ->name('admin.pekerja.index');
+
+    Route::get('/pekerja/{id}', [ManajemenPekerjaController::class, 'show'])
+        ->name('admin.pekerja.show');
+
+    Route::post('/pekerja/{id}/update-status', [ManajemenPekerjaController::class, 'updateStatus'])
+        ->name('admin.pekerja.update-status');
+
+    Route::delete('/pekerja/{id}', [ManajemenPekerjaController::class, 'destroy'])
+        ->name('admin.pekerja.delete');
 });
 
 /*
@@ -82,46 +105,64 @@ Route::middleware(['auth', 'role:pekerja'])
     ->prefix('pekerja')
     ->group(function () {
 
-        // Dashboard pekerja
-        Route::get('/dashboard', fn() =>
-            view('pekerja.dashboard')
-        )->name('pekerja.dashboard');
+    /* DASHBOARD PEKERJA */
+    Route::get('/dashboard', fn() => view('pekerja.dashboard'))
+        ->name('pekerja.dashboard');
 
-        /*
-        |--------------------------------------------------------------------------
-        | ROUTE YANG BOLEH DIAKSES SEBELUM DIVERIFIKASI ADMIN
-        |--------------------------------------------------------------------------
-        */
-        Route::get('/account/status', [PekerjaStatusController::class, 'index'])->name('pekerja.account.status');
+    /*
+    |--------------------------------------------------------------------------
+    | ROUTE SEBELUM DIVERIFIKASI ADMIN
+    |--------------------------------------------------------------------------
+    */
+    Route::get('/account/status', [PekerjaStatusController::class, 'index'])
+        ->name('pekerja.account.status');
 
-        Route::get('/account/ktp', [PekerjaStatusController::class, 'ktpForm'])->name('pekerja.account.ktp');
-        Route::post('/account/ktp', [PekerjaStatusController::class, 'ktpUpload'])->name('pekerja.account.ktp.upload');
+    Route::get('/account/ktp', [PekerjaStatusController::class, 'ktpForm'])
+        ->name('pekerja.account.ktp');
 
-        Route::get('/account/profile', [PekerjaStatusController::class, 'profileForm'])->name('pekerja.account.profile');
-        Route::post('/account/profile', [PekerjaStatusController::class, 'profileUpdate'])->name('pekerja.account.profile.update');
+    Route::post('/account/ktp', [PekerjaStatusController::class, 'ktpUpload'])
+        ->name('pekerja.account.ktp.upload');
 
-        Route::get('/account/rekening', [PekerjaStatusController::class, 'rekeningForm'])->name('pekerja.account.rekening');
-        Route::post('/account/rekening', [PekerjaStatusController::class, 'rekeningUpdate'])->name('pekerja.account.rekening.update');
+    Route::get('/account/profile', [PekerjaStatusController::class, 'profileForm'])
+        ->name('pekerja.account.profile');
 
-        // Ajukan verifikasi
-        Route::post('/account/submit-verification', [PekerjaStatusController::class, 'submitVerification'])
-            ->name('pekerja.account.submit');
+    Route::post('/account/profile', [PekerjaStatusController::class, 'profileUpdate'])
+        ->name('pekerja.account.profile.update');
 
-        /*
-        |--------------------------------------------------------------------------
-        | ROUTE YANG WAJIB PEKERJA SUDAH DIVERIFIKASI ADMIN
-        |--------------------------------------------------------------------------
-        */
-        Route::middleware(['verified.worker'])
-            ->prefix('manajemen-jasa')
-            ->group(function () {
+    Route::get('/account/rekening', [PekerjaStatusController::class, 'rekeningForm'])
+        ->name('pekerja.account.rekening');
 
-                Route::get('/', [JasaController::class, 'index'])->name('pekerja.manajemen-jasa.index');
-                Route::get('/create', [JasaController::class, 'create'])->name('pekerja.manajemen-jasa.create');
-                Route::post('/store', [JasaController::class, 'store'])->name('pekerja.manajemen-jasa.store');
-                Route::get('/edit/{id}', [JasaController::class, 'edit'])->name('pekerja.manajemen-jasa.edit');
-                Route::put('/update/{id}', [JasaController::class, 'update'])->name('pekerja.manajemen-jasa.update');
-                Route::delete('/delete/{id}', [JasaController::class, 'destroy'])->name('pekerja.manajemen-jasa.delete');
-            });
+    Route::post('/account/rekening', [PekerjaStatusController::class, 'rekeningUpdate'])
+        ->name('pekerja.account.rekening.update');
 
+    Route::post('/account/submit-verification', [PekerjaStatusController::class, 'submitVerification'])
+        ->name('pekerja.account.submit');
+
+    /*
+    |--------------------------------------------------------------------------
+    | ROUTE UNTUK PEKERJA YANG SUDAH DIVERIFIKASI
+    |--------------------------------------------------------------------------
+    */
+    Route::middleware(['verified.worker'])
+        ->prefix('manajemen-jasa')
+        ->group(function () {
+
+        Route::get('/', [JasaController::class, 'index'])
+            ->name('pekerja.manajemen-jasa.index');
+
+        Route::get('/create', [JasaController::class, 'create'])
+            ->name('pekerja.manajemen-jasa.create');
+
+        Route::post('/store', [JasaController::class, 'store'])
+            ->name('pekerja.manajemen-jasa.store');
+
+        Route::get('/edit/{id}', [JasaController::class, 'edit'])
+            ->name('pekerja.manajemen-jasa.edit');
+
+        Route::put('/update/{id}', [JasaController::class, 'update'])
+            ->name('pekerja.manajemen-jasa.update');
+
+        Route::delete('/delete/{id}', [JasaController::class, 'destroy'])
+            ->name('pekerja.manajemen-jasa.delete');
+    });
 });

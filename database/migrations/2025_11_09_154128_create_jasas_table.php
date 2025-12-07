@@ -9,26 +9,29 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('jasas', function (Blueprint $table) {
-            $table->id();
+        $table->id();
 
-            // data umum
-            $table->string('nama');
-            $table->string('slug')->unique();
-            $table->text('deskripsi');
-            $table->string('harga')->nullable();
-            $table->string('durasi')->nullable();
-            $table->string('kontak')->nullable();
-            $table->string('gambar')->nullable();
+        $table->unsignedBigInteger('user_id');
 
-            // data untuk pekerja
-            $table->string('nama_jasa')->nullable();
-            $table->integer('estimasi_waktu')->nullable();
+        // tidak perlu kolom nama
+        $table->string('nama_jasa');
+        $table->string('slug')->unique();
 
-            // kategori
-            $table->unsignedBigInteger('kategori_id')->nullable();
+        $table->text('deskripsi');
+        $table->string('harga')->nullable();
+        $table->integer('estimasi_waktu')->nullable();
+        $table->string('durasi')->nullable();
+        $table->string('kontak')->nullable();
+        $table->string('gambar')->nullable();
 
-            $table->timestamps();
-        });
+        $table->unsignedBigInteger('kategori_id')->nullable();
+
+        $table->tinyInteger('status')->default(0);
+        $table->text('alasan_tolak')->nullable();
+
+        $table->timestamps();
+    });
+
     }
 
     public function down(): void
