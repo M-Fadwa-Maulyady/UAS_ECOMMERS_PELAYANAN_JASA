@@ -56,7 +56,27 @@
             <span>Ind (ID)</span>
             <i class="fa-solid fa-chevron-down"></i>
           </div>
-          <button class="icon-btn"><i class="fa-regular fa-bell"></i></button>
+          <div class="notif-wrapper">
+    <button class="icon-btn" id="notifBtn">
+        <i class="fa-regular fa-bell"></i>
+
+        @if(auth()->user()->unreadNotifications->count() > 0)
+            <span class="notif-badge">{{ auth()->user()->unreadNotifications->count() }}</span>
+        @endif
+    </button>
+
+    <div class="notif-dropdown" id="notifDropdown">
+        @forelse(auth()->user()->unreadNotifications as $notif)
+            <div class="notif-item">
+                <strong>{{ $notif->data['judul'] ?? 'Notifikasi' }}</strong><br>
+                <small>{{ $notif->data['pesan'] ?? '' }}</small>
+            </div>
+        @empty
+            <div class="notif-item empty">Tidak ada notifikasi</div>
+        @endforelse
+    </div>
+</div>
+
           <div class="profile">
             <img src="https://i.pravatar.cc/100?img=15" alt="avatar">
             <div class="info">

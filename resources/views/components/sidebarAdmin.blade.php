@@ -34,6 +34,11 @@
             <i class="fas fa-briefcase"></i> Manajemen Jasa
         </a>
 
+             <a href="{{ route('admin.orders') }}" 
+            class="{{ request()->is('admin/orders*') ? 'active' : '' }}">
+                <i class="fas fa-shopping-cart"></i> Manajemen Order
+            </a>
+
         <a href="/admin/transaksi">
             <i class="fas fa-receipt"></i> Manajemen Transaksi
         </a>

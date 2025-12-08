@@ -213,3 +213,18 @@ document.addEventListener('click', (e) => {
   }
 });
 
+document.addEventListener("DOMContentLoaded", function () {
+    const notifBtn = document.getElementById("notifBtn");
+    const notifDropdown = document.getElementById("notifDropdown");
+
+    notifBtn.addEventListener("click", function (e) {
+        notifDropdown.style.display =
+            notifDropdown.style.display === "block" ? "none" : "block";
+
+        e.stopPropagation();
+    });
+
+    document.addEventListener("click", function () {
+        notifDropdown.style.display = "none";
+    });
+});
