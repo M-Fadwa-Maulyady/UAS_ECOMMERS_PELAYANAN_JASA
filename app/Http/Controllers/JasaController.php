@@ -8,24 +8,29 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
+// 🚨 IMPORT NOTIFIKASI
+use App\Notifications\JasaApprovedNotification;
+use App\Notifications\JasaRejectedNotification;
+
+
 class JasaController extends Controller
 {
-    /* ==========================
-       PEKERJA – LIST JASA
-    ========================== */
+    /* ======================================================
+       👨‍🔧 PEKERJA — LIST JASA
+    ====================================================== */
     public function index()
     {
         $jasa = Jasa::where('user_id', auth()->id())
-                    ->orderBy('status', 'asc')
-                    ->get();
+            ->orderBy('status', 'asc')
+            ->get();
 
         return view('pekerja.manajemen-jasa.index', compact('jasa'));
     }
 
 
-    /* ==========================
-       PEKERJA – FORM TAMBAH
-    ========================== */
+    /* ======================================================
+       👨‍🔧 PEKERJA — FORM TAMBAH JASA
+    ====================================================== */
     public function create()
     {
         $kategoris = Kategori::all();
@@ -33,9 +38,9 @@ class JasaController extends Controller
     }
 
 
-    /* ==========================
-       PEKERJA – SIMPAN JASA
-    ========================== */
+    /* ======================================================
+       👨‍🔧 PEKERJA — SIMPAN JASA
+    ====================================================== */
     public function store(Request $request)
     {
         $request->validate([
@@ -58,7 +63,7 @@ class JasaController extends Controller
             'harga'          => $request->harga,
             'kategori_id'    => $request->kategori_id,
             'gambar'         => $path,
-            'status'         => 0,  // 0 = pending admin
+            'status'         => 0,  // pending approval
         ]);
 
         return redirect()->route('pekerja.manajemen-jasa.index')
@@ -66,9 +71,9 @@ class JasaController extends Controller
     }
 
 
-    /* ==========================
-       PEKERJA – EDIT JASA
-    ========================== */
+    /* ======================================================
+       👨‍🔧 PEKERJA — EDIT
+    ====================================================== */
     public function edit($id)
     {
         $jasa = Jasa::where('user_id', auth()->id())->findOrFail($id);
@@ -78,9 +83,9 @@ class JasaController extends Controller
     }
 
 
-    /* ==========================
-       PEKERJA – UPDATE JASA
-    ========================== */
+    /* ======================================================
+       👨‍🔧 PEKERJA — UPDATE
+    ====================================================== */
     public function update(Request $request, $id)
     {
         $jasa = Jasa::where('user_id', auth()->id())->findOrFail($id);
@@ -101,6 +106,7 @@ class JasaController extends Controller
             'estimasi_waktu' => $request->estimasi_waktu,
             'harga'          => $request->harga,
             'kategori_id'    => $request->kategori_id,
+            'status'         => 0, // kembali pending setelah edit
         ];
 
         if ($request->hasFile('gambar')) {
@@ -110,9 +116,6 @@ class JasaController extends Controller
             $data['gambar'] = $request->file('gambar')->store('jasa', 'public');
         }
 
-        // set ulang status menjadi pending jika edit
-        $data['status'] = 0;
-
         $jasa->update($data);
 
         return redirect()->route('pekerja.manajemen-jasa.index')
@@ -120,9 +123,9 @@ class JasaController extends Controller
     }
 
 
-    /* ==========================
-       PEKERJA – HAPUS JASA
-    ========================== */
+    /* ======================================================
+       👨‍🔧 PEKERJA — HAPUS
+    ====================================================== */
     public function destroy($id)
     {
         $jasa = Jasa::where('user_id', auth()->id())->findOrFail($id);
@@ -138,9 +141,9 @@ class JasaController extends Controller
     }
 
 
-    /* ==========================
-       ADMIN – LIST JASA
-    ========================== */
+    /* ======================================================
+       🛠 ADMIN — LIST DATA JASA PENDING + APPROVED
+    ====================================================== */
     public function adminIndex()
     {
         $jasaList = Jasa::orderBy('status', 'asc')->get();
@@ -148,23 +151,28 @@ class JasaController extends Controller
     }
 
 
-    /* ==========================
-       ADMIN – APPROVE
-    ========================== */
+    /* ======================================================
+       🛠 ADMIN — SETUJU (APPROVE)
+    ====================================================== */
     public function approve($id)
     {
         $jasa = Jasa::findOrFail($id);
-        $jasa->status = 1; // approved
-        $jasa->alasan_tolak = null;
-        $jasa->save();
 
-        return back()->with('success', 'Jasa berhasil disetujui!');
+        $jasa->update([
+            'status' => 1,
+            'alasan_tolak' => null,
+        ]);
+
+        // 🚨 Kirim notifikasi ke pekerja
+        $jasa->user->notify(new JasaApprovedNotification($jasa));
+
+        return back()->with('success', 'Jasa berhasil disetujui dan kini tampil di website!');
     }
 
 
-    /* ==========================
-       ADMIN – REJECT
-    ========================== */
+    /* ======================================================
+       🛠 ADMIN — TOLAK (REJECT)
+    ====================================================== */
     public function reject(Request $request, $id)
     {
         $request->validate([
@@ -172,17 +180,25 @@ class JasaController extends Controller
         ]);
 
         $jasa = Jasa::findOrFail($id);
-        $jasa->status = 2; // rejected
-        $jasa->alasan_tolak = $request->alasan;
-        $jasa->save();
 
-        return back()->with('success', 'Jasa berhasil ditolak.');
+        $jasa->update([
+            'status' => 2,
+            'alasan_tolak' => $request->alasan,
+        ]);
+
+        // 🚨 Notifikasi ke pekerja
+        $jasa->user->notify(new JasaRejectedNotification($jasa, $request->alasan));
+
+        return back()->with('success', 'Jasa ditolak & notifikasi dikirim.');
     }
 
+
+    /* ======================================================
+       🛠 ADMIN — DETAIL
+    ====================================================== */
     public function adminDetail($id)
     {
         $jasa = Jasa::with('user', 'kategori')->findOrFail($id);
         return view('admin.jasa.detail', compact('jasa'));
     }
-
 }

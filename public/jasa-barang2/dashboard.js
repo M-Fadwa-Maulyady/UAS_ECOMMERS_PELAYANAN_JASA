@@ -1,204 +1,152 @@
-// Smooth scroll effect for navigation links
+/* ==========================
+   Smooth Scroll Navigation
+========================== */
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
         e.preventDefault();
-        const targetElement = document.querySelector(this.getAttribute('href'));
-        if (targetElement) {
-            targetElement.scrollIntoView({
-                behavior: 'smooth'
-            });
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({ behavior: 'smooth' });
         }
     });
 });
 
-// Navbar shadow on scroll
+/* ==========================
+   Navbar Shadow On Scroll
+========================== */
 window.addEventListener('scroll', () => {
-    const nav = document.querySelector('.navbar');
-    if (window.scrollY > 50) {
-        nav.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
-    } else {
-        nav.style.boxShadow = 'none';
-    }
+    document.querySelector('.navbar').style.boxShadow =
+        window.scrollY > 50 ? '0 2px 10px rgba(0,0,0,0.1)' : 'none';
 });
-// ===================================
-// === SMOOTH SLIDER KATEGORI (CATEGORY) ===
-// ===================================
+
+/* ==========================
+   CATEGORY SLIDER FIXED
+========================== */
 
 const categorySlider = document.querySelector('.category-slider');
-let cards = Array.from(document.querySelectorAll('.category-card'));
+const leftBtn = document.querySelector('.slide-btn.left');
+const rightBtn = document.querySelector('.slide-btn.right');
 
-if (!categorySlider || cards.length === 0) {
-    console.warn("Category slider not ready — no cards found.");
-} else {
+let categoryCards = Array.from(document.querySelectorAll('.category-card'));
 
-    const leftBtn = document.querySelector('.slide-btn.left');
-    const rightBtn = document.querySelector('.slide-btn.right');
+if (categorySlider && categoryCards.length > 0) {
 
-    const cardWidth = 170;
-    let visibleCards = Math.min(cards.length, 3);
-    let currentIndex = visibleCards;
+    if (categoryCards.length === 1) {
 
-    let isTransitioning = false;
+        // Hide arrows if only 1 category
+        leftBtn.style.display = "none";
+        rightBtn.style.display = "none";
+        console.warn("Kategori cuma 1 → slider disabled.");
 
-    // clone untuk infinite loop
-    const firstClones = cards.slice(0, visibleCards).map(c => c.cloneNode(true));
-    const lastClones = cards.slice(-visibleCards).map(c => c.cloneNode(true));
+    } else {
 
-    firstClones.forEach(clone => categorySlider.appendChild(clone));
-    lastClones.forEach(clone => categorySlider.prepend(clone));
+        // Prevent multiple cloning
+        if (!categorySlider.dataset.cloned) {
+            categorySlider.innerHTML += categorySlider.innerHTML; 
+            categorySlider.dataset.cloned = "true";
+            categoryCards = Array.from(document.querySelectorAll('.category-card'));
+        }
 
-    cards = Array.from(document.querySelectorAll('.category-card'));
+        const cardWidth = 180;
+        let index = categoryCards.length / 2;
+        let sliding = false;
 
-    // posisi awal
-    categorySlider.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
-    categorySlider.style.transition = "transform 0.5s ease";
+        categorySlider.style.transform = `translateX(-${index * cardWidth}px)`;
+        categorySlider.style.transition = "transform .5s ease";
 
-    function updateCategorySlide() {
-        if (isTransitioning) return;
-        isTransitioning = true;
+        function moveSlider(step) {
+            if (sliding) return;
+            sliding = true;
 
-        categorySlider.style.transition = "transform 0.5s ease";
-        categorySlider.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
+            index += step;
+            categorySlider.style.transform = `translateX(-${index * cardWidth}px)`;
+        }
+
+        categorySlider.addEventListener("transitionend", () => {
+            sliding = false;
+
+            if (index >= categoryCards.length - 2) {
+                index = categoryCards.length / 2;
+                categorySlider.style.transition = "none";
+                categorySlider.style.transform = `translateX(-${index * cardWidth}px)`;
+                setTimeout(() => categorySlider.style.transition = "transform .5s ease");
+            }
+
+            if (index < 2) {
+                index = categoryCards.length / 2 - 2;
+                categorySlider.style.transition = "none";
+                categorySlider.style.transform = `translateX(-${index * cardWidth}px)`;
+                setTimeout(() => categorySlider.style.transition = "transform .5s ease");
+            }
+        });
+
+        rightBtn.addEventListener('click', () => {
+            moveSlider(1);
+            restartAutoSlide();
+        });
+
+        leftBtn.addEventListener('click', () => {
+            moveSlider(-1);
+            restartAutoSlide();
+        });
+
+        let autoSlide = setInterval(() => moveSlider(1), 3000);
+
+        function restartAutoSlide() {
+            clearInterval(autoSlide);
+            autoSlide = setInterval(() => moveSlider(1), 3000);
+        }
+
     }
-
-    // reset loop
-    categorySlider.addEventListener('transitionend', () => {
-        isTransitioning = false;
-
-        if (currentIndex >= cards.length - visibleCards) {
-            currentIndex = visibleCards;
-            categorySlider.style.transition = "none";
-            categorySlider.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
-        }
-
-        if (currentIndex < visibleCards) {
-            currentIndex = cards.length - visibleCards * 2;
-            categorySlider.style.transition = "none";
-            categorySlider.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
-        }
-    });
-
-    // tombol next / prev
-    rightBtn.addEventListener('click', () => {
-        currentIndex++;
-        updateCategorySlide();
-    });
-
-    leftBtn.addEventListener('click', () => {
-        currentIndex--;
-        updateCategorySlide();
-    });
-
 }
 
+/* ==========================
+   OFFER SLIDER FIXED
+========================== */
 
-// --- NEXT & PREV HANDLERS ---
-function nextCategorySlide() {
-    if (isTransitioning) return;
-    currentIndex++;
-    updateCategorySlide();
-}
-
-function prevCategorySlide() {
-    if (isTransitioning) return;
-    currentIndex--;
-    updateCategorySlide();
-}
-
-// Tombol panah
-rightBtn.addEventListener('click', () => {
-    nextCategorySlide();
-    restartAutoSlide();
-});
-
-leftBtn.addEventListener('click', () => {
-    prevCategorySlide();
-    restartAutoSlide();
-});
-
-// --- AUTO SLIDE ---
-function startAutoSlide() {
-    autoSlide = setInterval(() => {
-        nextCategorySlide();
-    }, 3000);
-}
-
-function stopAutoSlide() {
-    clearInterval(autoSlide);
-}
-
-function restartAutoSlide() {
-    stopAutoSlide();
-    startAutoSlide();
-}
-
-startAutoSlide();
-
-// ===================================
-// === SLIDER PENAWARAN KHUSUS (OFFER) - FIXED === 
-// ===================================
-
-// **FIXED: Ganti nama variabel dari 'slider' menjadi 'offerSlider'**
-const offerSlider = document.querySelector('.offer-slider'); 
+const offerSlider = document.querySelector('.offer-slider');
 const offerContainer = document.querySelector('.offer-slider-container');
 const dots = document.querySelectorAll('.offer-dots .dot');
+
 let currentOfferSlide = 0;
-const totalOfferSlides = dots.length; // 2 slide
 
-function showOfferSlide(index) {
-    if (!offerSlider || !offerContainer) return; 
+function showOffer(index) {
+    if (!offerSlider) return;
+    
+    const width = offerContainer.offsetWidth;
+    offerSlider.style.transform = `translateX(-${index * width}px)`;
 
-    // Hitung lebar geser: diasumsikan lebar 1 slide = lebar container yang menampung 3 kartu
-    const slideUnit = offerContainer.offsetWidth; 
-    
-    // Geser elemen offerSlider
-    offerSlider.style.transform = `translateX(-${index * slideUnit}px)`;
-    
-    // Update dots
     dots.forEach(dot => dot.classList.remove('active'));
     dots[index].classList.add('active');
 }
 
-// Event Listener untuk Dots
-dots.forEach((dot, index) => {
+dots.forEach((dot, i) => {
     dot.addEventListener('click', () => {
-        currentOfferSlide = index;
-        showOfferSlide(currentOfferSlide);
+        currentOfferSlide = i;
+        showOffer(i);
     });
 });
 
-// Auto slide setiap 5 detik
+// Auto slide
 setInterval(() => {
-    // Pindah ke slide berikutnya (0 ke 1, atau 1 kembali ke 0)
-    currentOfferSlide = (currentOfferSlide + 1) % totalOfferSlides;
-    showOfferSlide(currentOfferSlide);
+    currentOfferSlide = (currentOfferSlide + 1) % dots.length;
+    showOffer(currentOfferSlide);
 }, 5000);
 
-// Set posisi awal saat halaman dimuat
-showOfferSlide(currentOfferSlide);
+showOffer(currentOfferSlide);
 
-// ===================================
-// === DROPDOWN NAVIGASI ===
-// ===================================
+/* ==========================
+   DROPDOWN FIX
+========================== */
 
-const dropdownToggle = document.querySelector('.dropdown');
+const dropdown = document.querySelector('.dropdown');
 
-if (dropdownToggle) {
-    dropdownToggle.addEventListener('click', (e) => {
-        // Mencegah navigasi ke services-section saat dropdown diklik
-        e.preventDefault(); 
-        
-        // Toggle class 'active' pada li.dropdown
-        dropdownToggle.classList.toggle('active');
-        
-        // Menghentikan event click menyebar ke window (agar tidak langsung tertutup)
+if (dropdown) {
+    dropdown.addEventListener('click', (e) => {
+        e.preventDefault();
+        dropdown.classList.toggle('active');
         e.stopPropagation();
     });
-}
 
-// Menutup dropdown ketika klik di luar area
-window.addEventListener('click', () => {
-    if (dropdownToggle && dropdownToggle.classList.contains('active')) {
-        dropdownToggle.classList.remove('active');
-    }
-});
+    window.addEventListener('click', () => dropdown.classList.remove('active'));
+}

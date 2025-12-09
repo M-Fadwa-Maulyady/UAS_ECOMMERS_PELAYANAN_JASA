@@ -10,16 +10,22 @@ class LandingController extends Controller
 {
     public function index()
     {
-        $jasas = Jasa::latest()->get();
-        $kategori = Kategori::orderBy('nama')->get();
+        // ambil kategori yang punya jasa aktif (disetujui admin)
+        $kategori = Kategori::whereHas('jasa', function($q) {
+            $q->where('status', 1); // hanya jasa yang disetujui admin
+        })->orderBy('nama')->get();
+
+        // ambil jasa aktif saja
+        $jasas = Jasa::where('status', 1)->latest()->get();
 
         return view('user.landing', compact('jasas', 'kategori'));
     }
 
-
     public function show($slug)
-    {
-        $jasa = Jasa::where('slug', $slug)->firstOrFail();
-        return view('jasa.show', compact('jasa'));
-    }
+{
+    $jasa = Jasa::where('slug', $slug)->where('status', 1)->firstOrFail();
+
+    return view('user.jasa.show', compact('jasa'));
+}
+
 }

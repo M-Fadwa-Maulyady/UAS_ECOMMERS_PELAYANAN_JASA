@@ -10,7 +10,15 @@ use App\Http\Controllers\ManajemenUserController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\ManajemenPekerjaController;
 use App\Http\Controllers\PekerjaStatusController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\OrderController;
+use App\Notifications\TestNotification;
 
+/*
+|--------------------------------------------------------------------------
+| PUBLIC ROUTES
+|--------------------------------------------------------------------------
+*/
 /*
 |--------------------------------------------------------------------------
 | PUBLIC ROUTES
@@ -20,6 +28,26 @@ Route::get('/', [LandingController::class, 'index'])->name('landing');
 Route::get('/kategori', [LandingController::class, 'index'])->name('kategori.all');
 Route::get('/landing', [LandingController::class, 'index'])->name('landing.list');
 Route::get('/jasa/{slug}', [LandingController::class, 'show'])->name('jasa.show');
+
+
+// ======= CHECKOUT SUCCESS PAGE (PUBLIC AFTER CHECKOUT) =======
+Route::get('/checkout/success', function () {
+    return view('user.checkout-success');
+})->name('checkout.success');
+
+
+
+// ======= USER LOGGED IN AREA =======
+Route::middleware(['auth'])->group(function () {
+
+    Route::get('/checkout/{slug}', [CheckoutController::class, 'checkoutPage'])
+        ->name('checkout.page');
+
+    Route::post('/checkout/{id}', [CheckoutController::class, 'store'])
+        ->name('checkout.store');
+});
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -94,6 +122,11 @@ Route::middleware(['auth', 'role:admin'])
 
     Route::delete('/pekerja/{id}', [ManajemenPekerjaController::class, 'destroy'])
         ->name('admin.pekerja.delete');
+
+        /* ================= ORDER MANAGEMENT ================= */
+    Route::get('/orders', [OrderController::class, 'index'])->name('admin.orders');
+Route::post('/orders/{id}/approve', [OrderController::class, 'approve'])->name('admin.order.approve');
+Route::post('/orders/{id}/reject', [OrderController::class, 'reject'])->name('admin.order.reject');
 });
 
 /*
@@ -164,5 +197,31 @@ Route::middleware(['auth', 'role:pekerja'])
 
         Route::delete('/delete/{id}', [JasaController::class, 'destroy'])
             ->name('pekerja.manajemen-jasa.delete');
+
+            /* ===================== MANAGE ORDER ===================== */
+
+        Route::get('/orders', [OrderController::class, 'workerOrders'])
+    ->name('pekerja.orders.index');
+
+Route::post('/orders/{id}/accept', [OrderController::class, 'workerAccept'])
+    ->name('pekerja.orders.accept');
+
+Route::post('/orders/{id}/reject', [OrderController::class, 'workerReject'])
+    ->name('pekerja.orders.reject');
+
+     Route::post('/orders/{id}/finish', [OrderController::class, 'workerFinish'])
+        ->name('pekerja.orders.finish');  // ⬅️ ini yang kurang
+
     });
+
+
+
+
+    Route::get('/test', function () {
+    $user = User::first();
+    $user->notify(new TestNotification());
+
+    return 'Notifikasi berhasil dikirim!';
+});
+
 });

@@ -1,0 +1,77 @@
+.jasa-container {
+    max-width: 1100px;
+    margin: 40px auto;
+    display: flex;
+    gap: 35px;
+    align-items: flex-start;
+    padding: 15px;
+}
+
+.jasa-img img {
+    width: 420px;
+    height: 320px;
+    border-radius: 12px;
+    object-fit: cover;
+    box-shadow: 0px 3px 8px rgba(0,0,0,0.12);
+}
+
+.jasa-info {
+    flex: 1;
+}
+
+.jasa-title {
+    font-size: 30px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    line-height: 36px;
+}
+
+.jasa-price {
+    font-size: 24px;
+    font-weight: bold;
+    color: #0f8b5f;
+    margin: 8px 0;
+}
+
+.badge-estimasi {
+    display: inline-block;
+    background: #eafff4;
+    border: 1px solid #0f8b5f;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.line {
+    height: 1px;
+    width: 100%;
+    background-color: #ddd;
+    margin: 18px 0;
+}
+
+.jasa-desc {
+    font-size: 16px;
+    line-height: 26px;
+    color: #444;
+}
+
+.btn-order {
+    background: #0f8b5f;
+    color: white;
+    font-weight: 600;
+    padding: 13px 28px;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: .2s;
+    border: none;
+}
+.btn-order:hover {
+    background: #0c6b48;
+    transform: translateY(-2px);
+}
