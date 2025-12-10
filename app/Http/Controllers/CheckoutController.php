@@ -15,25 +15,26 @@ class CheckoutController extends Controller
     }
 
     public function store(Request $request, $id)
-    {
-        $request->validate([
-            'alamat' => 'required',
-            'tanggal' => 'required|date'
-        ]);
+{
+    $jasa = Jasa::findOrFail($id);
 
-        $jasa = Jasa::findOrFail($id);
+    $adminFee = $jasa->harga * 0.10;
+    $total = $jasa->harga + $adminFee;
 
-        Order::create([
-            'user_id'   => auth()->id(),
-            'jasa_id'   => $jasa->id,
-            'worker_id' => $jasa->user_id,
-            'alamat'    => $request->alamat,
-            'tanggal'   => $request->tanggal,
-            'status'    => 'pending_admin'
-        ]);
+    Order::create([
+        'user_id' => auth()->id(),
+        'jasa_id' => $jasa->id,
+        'worker_id' => $jasa->user_id,
+        'alamat' => $request->alamat,
+        'tanggal' => $request->tanggal,
+        'status' => Order::STATUS_PENDING_ADMIN,
+        'admin_fee' => $adminFee,
+        'total_transfer' => $total,
+    ]);
 
-        return redirect()->route('checkout.success')
-    ->with('success', 'Pesanan berhasil! Menunggu verifikasi admin.');
-    }
+    return redirect()->route('checkout.success')
+        ->with('success', 'Pesanan berhasil! Tunggu persetujuan admin.');
+}
+
 }
 

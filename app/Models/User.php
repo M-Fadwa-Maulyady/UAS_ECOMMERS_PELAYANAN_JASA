@@ -54,4 +54,11 @@ class User extends Authenticatable
         'is_pro_active'       => 'boolean',
         'password'            => 'hashed',
     ];
+
+    public function orders()
+{
+    return $this->hasMany(Order::class, 'worker_id');
+}
+
+
 }

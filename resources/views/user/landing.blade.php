@@ -89,6 +89,7 @@
                 <li><a href="#pricing-section">Pricing</a></li>
                 <li><a href="#contact-section">Contact</a></li>
                 <li><a href="#about-section">About</a></li>
+                <li><a href="{{ route('user.orders') }}">📦 Pesanan Saya</a></li>
             </ul>
 
             <div class="nav-right">

@@ -1,129 +1,103 @@
 <x-layoutJasa title="Order Management">
 
-<style>
-/* Wrapper style */
-.orders-wrapper {
-    max-width: 1250px;
-    margin: 25px auto;
-}
+@foreach ([
+    'pending' => ['title' => 'Menunggu Persetujuan', 'data' => $pendingOrders],
+    'active'  => ['title' => 'Sedang Dikerjakan', 'data' => $activeOrders],
+    'history' => ['title' => 'Riwayat Pesanan', 'data' => $historyOrders],
+] as $section)
 
-/* Tab Styling */
-.nav-tabs {
-    border-bottom: none !important;
-}
+<div class="table-box">
 
-.nav-tabs .nav-link {
-    background: #f6f6f6;
-    border-radius: 10px;
-    margin-right: 10px;
-    font-weight: 600;
-    padding: 10px 22px;
-    transition: .2s;
-    border: 1px solid #ddd;
-    color: #444;
-}
+    <h5 class="fw-bold mb-3">📌 {{ $section['title'] }}</h5>
 
-.nav-tabs .nav-link:hover {
-    background: #1b9c85;
-    color: white;
-}
+    @if($section['data']->count())
+        <table class="table align-middle text-center">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Customer</th>
+                    <th>Jasa</th>
+                    <th>Alamat</th>
+                    <th>Tanggal</th>
+                    <th>Status</th>
+                    <th>Bukti</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
 
-.nav-tabs .nav-link.active {
-    background: #009966;
-    border-color: #009966;
-    color: white !important;
-}
+            <tbody>
+                @foreach($section['data'] as $order)
+                <tr>
+                    <td>{{ $loop->iteration }}</td>
+                    <td>{{ $order->user->name }}</td>
+                    <td class="fw-semibold text-primary">{{ $order->jasa->nama_jasa }}</td>
+                    <td>{{ $order->alamat }}</td>
+                    <td>{{ \Carbon\Carbon::parse($order->tanggal)->format('d M Y') }}</td>
+                    <td>
+                        <span class="badge-status">
+                            {{ ucfirst(str_replace('_',' ',$order->status)) }}
+                        </span>
+                    </td>
 
-/* Table Box */
-.table-box {
-    background: white;
-    padding: 22px;
-    border-radius: 15px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
-    margin-top: 15px;
-}
+                    {{-- Jika sudah ada bukti --}}
+                    <td>
+                        @if($order->bukti_pengerjaan)
+                            <img src="{{ asset('uploads/bukti/'.$order->bukti_pengerjaan) }}"
+                                 class="bukti-preview">
+                        @else
+                            <span class="text-muted">-</span>
+                        @endif
+                    </td>
 
-/* Table style */
-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0 10px;
-}
+                    {{-- Aksi --}}
+                    <td>
+                        @if($section['title'] === 'Menunggu Persetujuan')
+                            <form method="POST" action="{{ route('pekerja.orders.accept',$order->id) }}">
+                                @csrf
+                                <button class="btn-green btn-sm">✔ Terima</button>
+                            </form>
 
-thead tr {
-    background: #e5f7ed;
-    font-size: 14px;
-    text-transform: uppercase;
-    font-weight: bold;
-}
+                            <form method="POST" action="{{ route('pekerja.orders.reject',$order->id) }}" class="mt-1">
+                                @csrf
+                                <button class="btn-red btn-sm">✖ Tolak</button>
+                            </form>
 
-tbody tr {
-    background: #fff;
-    border-radius: 10px;
-}
+                        @elseif($section['title'] === 'Sedang Dikerjakan')
 
-tbody tr:hover {
-    background: #f8fdfb;
-}
+                            {{-- BUTTON MODAL UPLOAD --}}
+                            <button class="btn-green btn-sm" data-bs-toggle="modal"
+                                data-bs-target="#modalUpload-{{ $order->id }}">
+                                📤 Upload & Selesai
+                            </button>
 
-td, th {
-    padding: 14px !important;
-}
+                            {{-- MODAL --}}
+                            <div class="modal fade" id="modalUpload-{{ $order->id }}">
+                              <div class="modal-dialog modal-dialog-centered">
+                                <form method="POST" enctype="multipart/form-data"
+                                      action="{{ route('pekerja.orders.finish',$order->id) }}">
+                                  @csrf
+                                  <div class="modal-content p-3">
+                                    <h5 class="fw-bold">Upload Bukti Pekerjaan</h5>
+                                    <input required type="file" name="bukti_pengerjaan"
+                                           class="form-control mt-2" accept="image/*">
+                                    <button class="btn-green w-100 mt-3">✔ Kirim & Selesaikan</button>
+                                  </div>
+                                </form>
+                              </div>
+                            </div>
 
-/* Empty message */
-.empty-state {
-    padding: 35px;
-    text-align: center;
-    color: #777;
-    font-size: 15px;
-}
-
-/* Buttons */
-.btn-action {
-    padding: 7px 18px;
-    font-weight: 600;
-    border-radius: 8px;
-    font-size: 14px;
-}
-</style>
-
-<div class="orders-wrapper">
-
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h4 class="fw-bold">📦 Order Management</h4>
-        <button onclick="location.reload()" class="btn btn-outline-success btn-sm">🔄 Refresh</button>
-    </div>
-
-    @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
+                        @endif
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @else
+        <div class="text-muted text-center py-3">
+            🚫 Tidak ada data.
+        </div>
     @endif
 
-    {{-- Navigation Tabs --}}
-    <ul class="nav nav-tabs">
-        <li class="nav-item">
-            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#pending">⏳ Menunggu</button>
-        </li>
-        <li class="nav-item">
-            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#active">🔧 Sedang Dikerjakan</button>
-        </li>
-        <li class="nav-item">
-            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#history">📁 Riwayat</button>
-        </li>
-    </ul>
-
-    {{-- Tab Contents --}}
-    <div class="tab-content">
-        <div class="tab-pane fade show active" id="pending">
-            @include('pekerja.orders.partials.pending')
-        </div>
-        <div class="tab-pane fade" id="active">
-            @include('pekerja.orders.partials.active')
-        </div>
-        <div class="tab-pane fade" id="history">
-            @include('pekerja.orders.partials.history')
-        </div>
-    </div>
-
 </div>
-
+@endforeach
 </x-layoutJasa>
