@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\ChatMessage;   // <= TAMBAHKAN INI
+use App\Models\OrderMessage;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -83,4 +85,34 @@ class OrderController extends Controller
         Order::findOrFail($id)->update(['status'=>Order::STATUS_REVISION]);
         return back()->with('warning','Revisi diminta.');
     }
+
+    public function chat($id)
+    {
+    $order = Order::with(['jasa', 'worker', 'user'])->findOrFail($id);
+
+    // Pastikan hanya user terkait yg bisa buka chat
+    if (auth()->id() != $order->user_id && auth()->id() != $order->worker_id) {
+        abort(403, 'Unauthorized');
+    }
+
+    $messages = ChatMessage::where('order_id', $id)->orderBy('created_at')->get();
+
+    return view('user.orders.chat', compact('order', 'messages'));
+    }
+
+    public function sendChat(Request $request, $id)
+    {
+    $request->validate([
+        'message' => 'required|string',
+    ]);
+
+    ChatMessage::create([
+        'order_id' => $id,
+        'sender_id' => auth()->id(),
+        'message' => $request->message,
+    ]);
+
+    return back();
+    }       
+
 }
