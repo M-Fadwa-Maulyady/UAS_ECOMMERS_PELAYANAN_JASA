@@ -16,7 +16,6 @@
 .btn-confirm:hover { background:#094c38; }
 </style>
 
-
 <div class="card shadow p-4" style="border-radius:18px;">
 
     <h3 class="fw-bold mb-4">📦 Pesanan Saya</h3>
@@ -30,6 +29,7 @@
                 <th>Tanggal</th>
                 <th>Status</th>
                 <th>Bukti</th>
+                <th>Chat</th>  {{-- FIX: Kolom Chat --}}
                 <th>Aksi</th>
             </tr>
         </thead>
@@ -63,6 +63,14 @@
                     @endif
                 </td>
 
+                {{-- FIX: Tombol chat muncul di kolom CHAT --}}
+                <td>
+                    <a href="{{ route('order.chat', $order->id) }}" 
+                       class="btn btn-sm btn-info">
+                        💬 Chat
+                    </a>
+                </td>
+
                 <td>
                     @if($order->status === 'waiting_user_confirmation')
                         <a class="btn-confirm"
@@ -73,9 +81,11 @@
                         -
                     @endif
                 </td>
+
             </tr>
             @endforeach
         </tbody>
+
     </table>
 
 </div>

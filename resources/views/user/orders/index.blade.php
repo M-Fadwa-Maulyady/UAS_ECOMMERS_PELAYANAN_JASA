@@ -4,9 +4,9 @@
     .order-container {
         max-width: 1100px;
         margin: 40px auto;
-        background: white;
+        background: #ffffff;
         padding: 25px;
-        border-radius: 14px;
+        border-radius: 16px;
         box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     }
 
@@ -30,9 +30,9 @@
     }
 
     tbody tr {
-        background: #ffffff;
-        border-radius: 12px;
-        transition: .25s;
+        background: white;
+        border-radius: 14px;
+        transition: .25s ease;
     }
 
     tbody tr:hover {
@@ -43,6 +43,7 @@
     td {
         padding: 14px;
         text-align: center;
+        vertical-align: middle;
     }
 
     .badge {
@@ -53,62 +54,63 @@
         display: inline-block;
     }
 
-    .badge-wait { background: #ffda79; }
-    .badge-done { background: #2ecc71; color: white; }
-    .badge-pending { background: #ff6b6b; color: white; }
-    .badge-worker { background: #1abc9c; color:white; }
+    .badge-wait { background:#ffda79; color:#000; }
+    .badge-done { background:#2ecc71; color:white; }
+    .badge-pending { background:#ff6b6b; color:white; }
+    .badge-worker { background:#1abc9c; color:white; }
 
     .btn {
         border: none;
-        padding: 7px 14px;
+        padding: 8px 14px;
         border-radius: 8px;
         cursor: pointer;
-        font-size: 14px;
+        font-size: 13px;
+        color: white;
         transition: .2s;
-        color:white;
-        display:inline-block;
+        display: inline-block;
+        margin: 2px 0;
     }
 
     .btn-pay { background:#007bff; }
     .btn-upload { background:#2980b9; }
     .btn-confirm { background:#0E6B50; }
     .btn-revision { background:#d9534f; }
+    .btn-chat { background:#17a2b8; }
 
-    .btn:hover { opacity: .8; }
+    .btn:hover { opacity:.85; }
 
-    img.bukti-img {
+    .bukti-img {
         width: 60px;
         height: 60px;
         object-fit: cover;
         border-radius: 8px;
-        border: 2px solid #ccc;
+        border: 2px solid #ddd;
     }
-
 </style>
 
 <div class="order-container">
 
-    <h3 class="fw-bold mb-3">📦 Pesanan Saya</h3>
+    <h3 class="fw-bold mb-4">📦 Pesanan Saya</h3>
 
-    {{-- Alert --}}
+    {{-- Alerts --}}
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
-
     @if(session('warning'))
         <div class="alert alert-warning">{{ session('warning') }}</div>
     @endif
 
     <table>
         <thead>
-        <tr>
-            <th>#</th>
-            <th>Jasa</th>
-            <th>Tanggal</th>
-            <th>Status</th>
-            <th>Bukti</th>
-            <th>Aksi</th>
-        </tr>
+            <tr>
+                <th>#</th>
+                <th>Jasa</th>
+                <th>Tanggal</th>
+                <th>Status</th>
+                <th>Bukti</th>
+                <th>Chat</th>
+                <th>Aksi</th>
+            </tr>
         </thead>
 
         <tbody>
@@ -122,21 +124,19 @@
 
                 <td>{{ \Carbon\Carbon::parse($order->tanggal)->format('d M Y') }}</td>
 
-
                 {{-- STATUS --}}
                 <td>
                     @switch($order->status)
-
                         @case('waiting_payment')
-                            <span class="badge badge-wait">Menunggu Pembayaran 💳</span>
+                            <span class="badge badge-wait">Menunggu Pembayaran</span>
                         @break
 
                         @case('waiting_upload')
-                            <span class="badge badge-worker">Upload Bukti 📤</span>
+                            <span class="badge badge-worker">Upload Bukti</span>
                         @break
 
                         @case('waiting_verification')
-                            <span class="badge badge-pending">Menunggu Verifikasi Admin ⏳</span>
+                            <span class="badge badge-pending">Verifikasi Admin</span>
                         @break
 
                         @case('waiting_user_confirmation')
@@ -144,7 +144,7 @@
                         @break
 
                         @case('revision_requested')
-                            <span class="badge badge-worker">Revisi Diminta ⚠</span>
+                            <span class="badge badge-worker">Revisi Diminta</span>
                         @break
 
                         @case('finished')
@@ -153,69 +153,73 @@
 
                         @default
                             <span class="badge badge-pending">{{ $order->status }}</span>
-
                     @endswitch
                 </td>
 
-
-                {{-- FOTO BUKTI --}}
+                {{-- BUKTI --}}
                 <td>
                     @if($order->bukti_pengerjaan)
-                        <img src="{{ asset('storage/bukti_order/' . $order->bukti_pengerjaan) }}" class="bukti-img">
+                        <img src="{{ asset('storage/bukti_order/'.$order->bukti_pengerjaan) }}"
+                             class="bukti-img">
                     @else
-                        <span>-</span>
+                        -
                     @endif
                 </td>
 
+                {{-- CHAT --}}
+                <td>
+                    <a href="{{ route('order.chat', $order->id) }}"
+                       class="btn btn-chat">
+                        💬 Chat
+                    </a>
+                </td>
 
-                {{-- ACTION BUTTONS --}}
-                {{-- ACTION BUTTONS --}}
-<td>
+                {{-- ACTION --}}
+                <td>
 
-    {{-- BAYAR --}}
-    @if($order->status === 'waiting_payment')
-        <a href="{{ route('payment.page', $order->id) }}" class="btn btn-pay">💳 Bayar Sekarang</a>
+                    {{-- BAYAR --}}
+                    @if($order->status === 'waiting_payment')
+                        <a href="{{ route('payment.page', $order->id) }}" class="btn btn-pay">💳 Bayar</a>
 
-    {{-- UPLOAD BUKTI PEMBAYARAN --}}
-    @elseif($order->status === 'waiting_upload')
-        <a href="{{ route('payment.upload.form', $order->id) }}" class="btn btn-upload">📤 Upload Bukti</a>
+                    {{-- UPLOAD BUKTI --}}
+                    @elseif($order->status === 'waiting_upload')
+                        <a href="{{ route('payment.upload.form', $order->id) }}" class="btn btn-upload">📤 Upload</a>
 
-    {{-- MENUNGGU VERIFIKASI --}}
-    @elseif($order->status === 'waiting_verification')
-        <span style="opacity:0.8;">⏳ Sedang Diverifikasi Admin...</span>
+                    {{-- VERIFIKASI --}}
+                    @elseif($order->status === 'waiting_verification')
+                        <span style="opacity:.7;">⏳ Verifikasi...</span>
 
-    {{-- KONFIRMASI & REVISI setelah pekerja mengirim bukti pekerjaan --}}
-    @elseif($order->status === 'waiting_user_confirmation')
+                    {{-- KONFIRMASI --}}
+                    @elseif($order->status === 'waiting_user_confirmation')
 
-        <form method="POST" action="{{ route('user.order.confirm', $order->id) }}" style="display:inline-block;">
-            @csrf
-            <button class="btn btn-confirm">✔ Konfirmasi</button>
-        </form>
+                        <form action="{{ route('user.order.confirm', $order->id) }}" method="POST" style="display:inline-block;">
+                            @csrf
+                            <button class="btn btn-confirm">✔ Konfirmasi</button>
+                        </form>
 
-        <form method="POST" action="{{ route('user.order.reject', $order->id) }}" 
-              style="display:inline-block; margin-left:6px;">
-            @csrf
-            <button class="btn btn-revision">✘ Revisi</button>
-        </form>
+                        <form action="{{ route('user.order.reject', $order->id) }}" method="POST" style="display:inline-block;">
+                            @csrf
+                            <button class="btn btn-revision">✘ Revisi</button>
+                        </form>
 
-    {{-- SELESAI --}}
-    @elseif($order->status === 'finished')
-        <span class="text-success fw-bold">✔ Selesai</span>
+                    {{-- SELESAI --}}
+                    @elseif($order->status === 'finished')
+                        <span class="text-success fw-bold">✔ Selesai</span>
 
-    {{-- REVISI DIMINTA --}}
-    @elseif($order->status === 'revision_requested')
-        <span style="opacity:0.7; font-style:italic;">Menunggu Perbaikan...</span>
+                    {{-- REVISI --}}
+                    @elseif($order->status === 'revision_requested')
+                        <span style="opacity:.7;">Menunggu Perbaikan...</span>
 
-    {{-- DEFAULT --}}
-    @else
-        <span style="opacity:0.4;">-</span>
-    @endif
-</td>
+                    {{-- DEFAULT --}}
+                    @else
+                        <span style="opacity:.4;">-</span>
+                    @endif
 
-
+                </td>
             </tr>
         @endforeach
         </tbody>
+
     </table>
 </div>
 

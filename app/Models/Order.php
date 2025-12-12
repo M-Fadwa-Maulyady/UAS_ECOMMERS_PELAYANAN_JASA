@@ -70,4 +70,10 @@ class Order extends Model
     {
         return $this->total_transfer - $this->admin_share;
     }
+
+    public function messages()
+    {
+        return $this->hasMany(OrderMessage::class);
+    }
+
 }
