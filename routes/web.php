@@ -12,6 +12,8 @@ use App\Http\Controllers\ManajemenPekerjaController;
 use App\Http\Controllers\PekerjaStatusController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\WorkerBalanceController;
 use App\Notifications\TestNotification;
 
 /*
@@ -34,6 +36,30 @@ Route::get('/jasa/{slug}', [LandingController::class, 'show'])->name('jasa.show'
 Route::get('/checkout/success', function () {
     return view('user.checkout-success');
 })->name('checkout.success');
+
+Route::middleware(['auth', 'role:user'])->group(function () {
+
+    Route::get('/user/orders', [OrderController::class, 'userOrders'])->name('user.orders');
+    Route::post('/user/orders/{id}/confirm', [OrderController::class, 'userConfirm'])->name('user.order.confirm');
+    Route::post('/user/orders/{id}/reject', [OrderController::class, 'userReject'])->name('user.order.reject');
+
+    // ====== PAYMENT FLOW ======
+
+    // 1. Upload bukti (HARUS PALING ATAS)
+    Route::get('/payment/upload/{payment}', [PaymentController::class, 'uploadForm'])
+        ->name('payment.upload.form');
+
+    Route::post('/payment/upload/{payment}', [PaymentController::class, 'upload'])
+        ->name('payment.upload');
+
+    // 2. Pilih metode pembayaran
+    Route::get('/payment/{order}', [PaymentController::class, 'create'])
+        ->name('payment.page');
+
+    Route::post('/payment/{order}', [PaymentController::class, 'store'])
+        ->name('payment.store');
+
+});
 
 
 
@@ -127,7 +153,24 @@ Route::middleware(['auth', 'role:admin'])
     Route::get('/orders', [OrderController::class, 'index'])->name('admin.orders');
 Route::post('/orders/{id}/approve', [OrderController::class, 'approve'])->name('admin.order.approve');
 Route::post('/orders/{id}/reject', [OrderController::class, 'reject'])->name('admin.order.reject');
+
+
+
+    Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
+
+    Route::get('/payments', [PaymentController::class, 'index'])
+        ->name('admin.payments');
+
+    Route::post('/payments/{payment}/approve', [PaymentController::class, 'approve'])
+        ->name('admin.payments.approve');
+
+    Route::post('/payments/{payment}/send', [PaymentController::class, 'sendToWorker'])
+        ->name('admin.payments.send');
 });
+
+});
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -170,15 +213,16 @@ Route::middleware(['auth', 'role:pekerja'])
 
     Route::post('/account/submit-verification', [PekerjaStatusController::class, 'submitVerification'])
         ->name('pekerja.account.submit');
+        
 
     /*
-    |--------------------------------------------------------------------------
-    | ROUTE UNTUK PEKERJA YANG SUDAH DIVERIFIKASI
-    |--------------------------------------------------------------------------
-    */
-    Route::middleware(['verified.worker'])
-        ->prefix('manajemen-jasa')
-        ->group(function () {
+|--------------------------------------------------------------------------
+| ROUTE UNTUK PEKERJA YANG SUDAH DIVERIFIKASI
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['verified.worker'])
+    ->prefix('manajemen-jasa')
+    ->group(function () {
 
         Route::get('/', [JasaController::class, 'index'])
             ->name('pekerja.manajemen-jasa.index');
@@ -198,21 +242,38 @@ Route::middleware(['auth', 'role:pekerja'])
         Route::delete('/delete/{id}', [JasaController::class, 'destroy'])
             ->name('pekerja.manajemen-jasa.delete');
 
-            /* ===================== MANAGE ORDER ===================== */
-
+        // ORDERS
         Route::get('/orders', [OrderController::class, 'workerOrders'])
-    ->name('pekerja.orders.index');
+            ->name('pekerja.orders.index');
 
-Route::post('/orders/{id}/accept', [OrderController::class, 'workerAccept'])
-    ->name('pekerja.orders.accept');
+        Route::post('/orders/{id}/accept', [OrderController::class, 'workerAccept'])
+            ->name('pekerja.orders.accept');
 
-Route::post('/orders/{id}/reject', [OrderController::class, 'workerReject'])
-    ->name('pekerja.orders.reject');
+        Route::post('/orders/{id}/reject', [OrderController::class, 'workerReject'])
+            ->name('pekerja.orders.reject');
 
-     Route::post('/orders/{id}/finish', [OrderController::class, 'workerFinish'])
-        ->name('pekerja.orders.finish');  // ⬅️ ini yang kurang
-
+        Route::post('/orders/{id}/finish', [OrderController::class, 'workerFinish'])
+            ->name('pekerja.orders.finish');
     });
+
+
+/*
+|--------------------------------------------------------------------------
+| ROUTE SALDO PEKERJA (BENAR)
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth', 'role:pekerja'])
+    ->prefix('worker')
+    ->name('worker.')
+    ->group(function () {
+
+        Route::get('/saldo', [WorkerBalanceController::class, 'index'])
+            ->name('saldo');
+
+        Route::post('/saldo/withdraw', [WorkerBalanceController::class, 'withdraw'])
+            ->name('saldo.withdraw');
+});
+
 
 
 

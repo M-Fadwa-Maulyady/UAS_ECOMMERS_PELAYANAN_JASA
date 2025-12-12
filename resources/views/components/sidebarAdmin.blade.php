@@ -39,9 +39,10 @@
                 <i class="fas fa-shopping-cart"></i> Manajemen Order
             </a>
 
-        <a href="/admin/transaksi">
-            <i class="fas fa-receipt"></i> Manajemen Transaksi
-        </a>
+        <a href="{{ route('admin.payments') }}">
+    <i class="fas fa-receipt"></i> Manajemen Transaksi
+</a>
+
 
         <a href="/admin/laporan">
             <i class="fas fa-chart-pie"></i> Laporan & Statistik

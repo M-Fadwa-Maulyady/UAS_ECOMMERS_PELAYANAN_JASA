@@ -11,6 +11,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <!-- App CSS -->
   <link rel="stylesheet" href="{{ asset('ayam/pekerja.css') }}">
+  <link rel="stylesheet" href="{{ asset('ayam/ordertolol.css') }}">
   <style>
   /* Biar kolom tidak melebar seenaknya */
   .table-wrapper table th,

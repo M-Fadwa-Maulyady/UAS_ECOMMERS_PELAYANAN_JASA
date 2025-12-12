@@ -6,41 +6,52 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up()
-{
-    Schema::create('orders', function (Blueprint $table) {
-        $table->id();
-        $table->foreignId('user_id')->constrained()->cascadeOnDelete(); // pelanggan
-        $table->foreignId('jasa_id')->constrained()->cascadeOnDelete(); // jasa yang dipesan
-        $table->foreignId('worker_id')->nullable()->constrained('users'); // pekerja jasa
+    {
+        Schema::create('orders', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('jasa_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('worker_id')->nullable()->constrained('users');
 
-        $table->string('alamat');
-        $table->string('tanggal');
-        $table->integer('jumlah')->default(1);
+            $table->string('alamat');
+            $table->string('tanggal');
+            $table->integer('jumlah')->default(1);
 
-        // Status alur
-        $table->enum('status', [
-            'pending_admin',   // user pesan → admin review
-            'approved_admin',  // admin setuju → menuju pekerja
-            'rejected_admin',  // admin tolak
+            // STATUS FLOW TERBARU
+            $table->enum('status', [
+                'pending_admin',             // user pesan → admin review
+                'approved_admin',            // admin setuju → lanjut pembayaran
 
-            'waiting_worker',  // pekerja harus approve
-            'accepted_worker', // pekerja terima
-            'rejected_worker', // pekerja tolak
-        ])->default('pending_admin');
+                'waiting_payment',           // user belum pilih metode / belum bayar
+                'waiting_upload',            // user pilih metode, belum upload bukti
+                'waiting_verification',      // admin cek bukti pembayaran
 
-        $table->timestamps();
-    });
-}
+                'rejected_admin',            // admin tolak
+                'waiting_worker',            // admin valid → worker review
+                'accepted_worker',           // worker terima
+                'rejected_worker',           // worker tolak
 
+                'waiting_user_confirmation', // hasil sudah upload → user cek
+                'revision_requested',        // user minta perbaikan
+                'finished',                  // pesanan selesai
+            ])->default('pending_admin');
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+            // --- PAYMENT SYSTEM ---
+            $table->string('payment_method')->nullable();     // qris/bank/cod
+            $table->string('bukti_pembayaran')->nullable();   // bukti transfer
+
+            $table->integer('admin_fee')->default(0);         // 10% potongan untuk admin
+            $table->integer('total_transfer')->default(0);    // total bayar user
+
+            // --- RESULT FROM WORKER ---
+            $table->string('bukti_pengerjaan')->nullable();   // upload hasil pekerjaan
+
+            $table->timestamps();
+        });
+    }
+
+    public function down()
     {
         Schema::dropIfExists('orders');
     }

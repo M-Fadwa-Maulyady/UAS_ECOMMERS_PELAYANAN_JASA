@@ -1,0 +1,88 @@
+/* ====== GLOBAL TABLE FIX ====== */
+table, .table, .data-table, .custom-table {
+    width: 100% !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    border-radius: 14px !important;
+    overflow: hidden !important;
+    background: white !important;
+}
+
+/* ===== HEADER ===== */
+table thead tr th, 
+.table thead tr th, 
+.data-table thead tr th {
+    background: #0E6B50 !important;
+    color: #fff !important;
+    font-weight: 600 !important;
+    text-align: center !important;
+    padding: 16px !important;
+    font-size: 14px !important;
+    border: none !important;
+    text-transform: uppercase;
+}
+
+/* Rounded header */
+table thead tr th:first-child {
+  border-top-left-radius: 14px !important;
+}
+table thead tr th:last-child {
+  border-top-right-radius: 14px !important;
+}
+
+/* ===== BODY ===== */
+table tbody tr td {
+    padding: 15px !important;
+    text-align: center !important;
+    font-size: 14px !important;
+    border: none !important;
+}
+
+/* Zebra rows */
+table tbody tr:nth-child(even) {
+    background: #F6FFFA !important;
+}
+
+/* Hover effect */
+table tbody tr:hover {
+    background: #E9FFF3 !important;
+    transition: .2s ease;
+}
+
+/* ===== BADGES ===== */
+.badge {
+    padding: 6px 12px !important;
+    border-radius: 6px !important;
+    font-weight: 600 !important;
+    font-size: 12px !important;
+}
+.badge.waiting { background: #FFC107 !important; }
+.badge.done { background: #28A745 !important; color:white !important; }
+.badge.process { background: #17A2B8 !important; color:white !important; }
+
+/* ===== BUTTON ===== */
+.btn-green {
+    background: #0E6B50 !important;
+    color: white !important;
+    padding: 6px 14px !important;
+    border-radius: 6px !important;
+    font-size: 13px !important;
+}
+.btn-green:hover { background: #084b38 !important; }
+
+.btn-red {
+    background: #C0392B !important;
+    color: white !important;
+    padding: 6px 14px !important;
+    border-radius: 6px !important;
+}
+.btn-red:hover { background: #A12820 !important; }
+
+/* ===== PHOTO PREVIEW ===== */
+.bukti-preview {
+    width: 50px !important;
+    height: 50px !important;
+    border-radius: 8px !important;
+    object-fit: cover !important;
+    border: 2px solid #DDD !important;
+}

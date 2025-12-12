@@ -20,9 +20,10 @@
         <a href="{{ route('pekerja.orders.index') }}" class="item">
             <i class="fa-solid fa-cart-arrow-down"></i> Order Management
         </a>
-        <a href="/jasa/kalender" class="item">
+        <a href="{{ route('worker.saldo') }}" class="item">
             <i class="fa-solid fa-dollar-sign"></i> Keuangan
         </a>
+
         <a href="/jasa/laporan" class="item">
             <i class="fa-solid fa-comment"></i> Chat / Komunikasi
         </a>
