@@ -131,18 +131,38 @@
         @foreach($messages as $msg)
         <div class="message {{ $msg->sender_id == auth()->id() ? 'me' : 'other' }}">
             <strong>{{ $msg->sender->name }}</strong>
-            {{ $msg->message }}
+            @if($msg->message)
+                {{ $msg->message }}
+            @endif
+
+            @if($msg->image)
+                <img src="{{ asset('storage/'.$msg->image) }}"
+                    style="max-width:220px;border-radius:12px;margin-top:6px;display:block;">
+            @endif
+
             <small>{{ $msg->created_at->format('H:i') }}</small>
         </div>
         @endforeach
     </div>
 
     <!-- INPUT -->
-    <form method="POST" action="{{ route('order.chat.send', $order->id) }}" class="chat-input">
+    <form method="POST"
+        action="{{ route('order.chat.send', $order->id) }}"
+        class="chat-input"
+        enctype="multipart/form-data">
+
         @csrf
-        <textarea name="message" class="form-control" placeholder="Ketik pesan..." required></textarea>
+
+        <label for="image" style="cursor:pointer;font-size:20px;">📎</label>
+        <input type="file" name="image" id="image" hidden>
+
+        <textarea name="message"
+                class="form-control"
+                placeholder="Ketik pesan..."></textarea>
+
         <button class="btn btn-success">Kirim</button>
     </form>
+
 
 </div>
 

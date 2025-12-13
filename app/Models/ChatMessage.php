@@ -10,6 +10,7 @@ class ChatMessage extends Model
         'order_id',
         'sender_id',
         'message',
+        'image',
     ];
 
     public function sender()
