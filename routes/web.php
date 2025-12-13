@@ -26,7 +26,7 @@ Route::get('/kategori', [LandingController::class, 'index'])->name('kategori.all
 Route::get('/landing', [LandingController::class, 'index'])->name('landing.list');
 Route::get('/jasa/{slug}', [LandingController::class, 'show'])->name('jasa.show');
 
-Route::get('/checkout/success', fn() => view('user.checkout-success'))
+Route::get('/checkout/success', fn () => view('user.checkout-success'))
     ->name('checkout.success');
 
 /*
@@ -47,38 +47,48 @@ Route::post('/register', [AuthController::class, 'register'])->name('register.po
 */
 Route::middleware(['auth', 'role:user'])->group(function () {
 
-    // ORDER LIST USER
-    Route::get('/user/orders', [OrderController::class, 'userOrders'])->name('user.orders');
-    Route::post('/user/orders/{id}/confirm', [OrderController::class, 'userConfirm'])->name('user.order.confirm');
-    Route::post('/user/orders/{id}/reject', [OrderController::class, 'userReject'])->name('user.order.reject');
+    Route::get('/user/orders', [OrderController::class, 'userOrders'])
+        ->name('user.orders');
 
-    /*
-    |--------------------------------------------------------------------------
-    | CHAT SYSTEM (User ↔ Worker)
-    |--------------------------------------------------------------------------
-    */
-    Route::get('/orders/{id}/chat', [OrderController::class, 'chat'])->name('order.chat');
-    Route::post('/orders/{id}/chat/send', [OrderController::class, 'sendChat'])->name('order.chat.send');
+    Route::post('/user/orders/{id}/confirm', [OrderController::class, 'userConfirm'])
+        ->name('user.order.confirm');
 
-    /*
-    |--------------------------------------------------------------------------
-    | PAYMENT
-    |--------------------------------------------------------------------------
-    */
-    Route::get('/payment/upload/{payment}', [PaymentController::class, 'uploadForm'])->name('payment.upload.form');
-    Route::post('/payment/upload/{payment}', [PaymentController::class, 'upload'])->name('payment.upload');
-    Route::get('/payment/{order}', [PaymentController::class, 'create'])->name('payment.page');
-    Route::post('/payment/{order}', [PaymentController::class, 'store'])->name('payment.store');
+    Route::post('/user/orders/{id}/reject', [OrderController::class, 'userReject'])
+        ->name('user.order.reject');
+
+    // ===== CHAT USER ↔ PEKERJA =====
+    Route::get('/orders/{id}/chat', [OrderController::class, 'chat'])
+        ->name('order.chat');
+
+    Route::post('/orders/{id}/chat/send', [OrderController::class, 'sendChat'])
+        ->name('order.chat.send');
+    // ==============================
+
+    // PAYMENT
+    Route::get('/payment/upload/{payment}', [PaymentController::class, 'uploadForm'])
+        ->name('payment.upload.form');
+
+    Route::post('/payment/upload/{payment}', [PaymentController::class, 'upload'])
+        ->name('payment.upload');
+
+    Route::get('/payment/{order}', [PaymentController::class, 'create'])
+        ->name('payment.page');
+
+    Route::post('/payment/{order}', [PaymentController::class, 'store'])
+        ->name('payment.store');
 });
 
 /*
 |--------------------------------------------------------------------------
-| CHECKOUT (Auth Required)
+| CHECKOUT (AUTH)
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth'])->group(function () {
-    Route::get('/checkout/{slug}', [CheckoutController::class, 'checkoutPage'])->name('checkout.page');
-    Route::post('/checkout/{id}', [CheckoutController::class, 'store'])->name('checkout.store');
+    Route::get('/checkout/{slug}', [CheckoutController::class, 'checkoutPage'])
+        ->name('checkout.page');
+
+    Route::post('/checkout/{id}', [CheckoutController::class, 'store'])
+        ->name('checkout.store');
 });
 
 /*
@@ -90,9 +100,9 @@ Route::middleware(['auth', 'role:admin'])
     ->prefix('admin')
     ->group(function () {
 
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])
+        ->name('dashboard');
 
-    // ANGGOTA
     Route::resource('anggota', AnggotaController::class)->names([
         'index' => 'dataAnggota',
         'create' => 'createAnggota',
@@ -102,15 +112,9 @@ Route::middleware(['auth', 'role:admin'])
         'destroy' => 'deleteAnggota',
     ]);
 
-    // USER & KATEGORI
     Route::resource('manajemen-user', ManajemenUserController::class);
     Route::resource('kategori', KategoriController::class);
 
-    /*
-    |--------------------------------------------------------------------------
-    | ADMIN - MANAJEMEN JASA
-    |--------------------------------------------------------------------------
-    */
     Route::prefix('jasa')->group(function () {
         Route::get('/', [JasaController::class, 'adminIndex'])->name('admin.jasa.index');
         Route::get('/{id}/detail', [JasaController::class, 'adminDetail'])->name('admin.jasa.detail');
@@ -118,30 +122,10 @@ Route::middleware(['auth', 'role:admin'])
         Route::post('/{id}/reject', [JasaController::class, 'reject'])->name('admin.jasa.reject');
     });
 
-    /*
-    |--------------------------------------------------------------------------
-    | ADMIN - MANAJEMEN PEKERJA
-    |--------------------------------------------------------------------------
-    */
-    Route::get('/pekerja', [ManajemenPekerjaController::class, 'index'])->name('admin.pekerja.index');
-    Route::get('/pekerja/{id}', [ManajemenPekerjaController::class, 'show'])->name('admin.pekerja.show');
-    Route::post('/pekerja/{id}/update-status', [ManajemenPekerjaController::class, 'updateStatus'])->name('admin.pekerja.update-status');
-    Route::delete('/pekerja/{id}', [ManajemenPekerjaController::class, 'destroy'])->name('admin.pekerja.delete');
-
-    /*
-    |--------------------------------------------------------------------------
-    | ADMIN - ORDERS
-    |--------------------------------------------------------------------------
-    */
     Route::get('/orders', [OrderController::class, 'index'])->name('admin.orders');
     Route::post('/orders/{id}/approve', [OrderController::class, 'approve'])->name('admin.order.approve');
     Route::post('/orders/{id}/reject', [OrderController::class, 'reject'])->name('admin.order.reject');
 
-    /*
-    |--------------------------------------------------------------------------
-    | ADMIN - PAYMENTS
-    |--------------------------------------------------------------------------
-    */
     Route::get('/payments', [PaymentController::class, 'index'])->name('admin.payments');
     Route::post('/payments/{payment}/approve', [PaymentController::class, 'approve'])->name('admin.payments.approve');
     Route::post('/payments/{payment}/send', [PaymentController::class, 'sendToWorker'])->name('admin.payments.send');
@@ -156,9 +140,20 @@ Route::middleware(['auth', 'role:pekerja'])
     ->prefix('pekerja')
     ->group(function () {
 
-    Route::get('/dashboard', fn() => view('pekerja.dashboard'))->name('pekerja.dashboard');
+    Route::get('/dashboard', fn () => view('pekerja.dashboard'))
+        ->name('pekerja.dashboard');
 
-    // BEFORE VERIFIED
+    // ===== CHAT PEKERJA =====
+    Route::get('/chat', [OrderController::class, 'workerChatList'])
+        ->name('pekerja.chat');
+
+    Route::get('/chat/{id}', [OrderController::class, 'workerChat'])
+        ->name('pekerja.chat.show');
+
+    Route::post('/chat/{id}/send', [OrderController::class, 'sendChat'])
+        ->name('pekerja.chat.send');
+    // =======================
+
     Route::get('/account/status', [PekerjaStatusController::class, 'index'])->name('pekerja.account.status');
     Route::get('/account/ktp', [PekerjaStatusController::class, 'ktpForm'])->name('pekerja.account.ktp');
     Route::post('/account/ktp', [PekerjaStatusController::class, 'ktpUpload'])->name('pekerja.account.ktp.upload');
@@ -168,7 +163,6 @@ Route::middleware(['auth', 'role:pekerja'])
     Route::post('/account/rekening', [PekerjaStatusController::class, 'rekeningUpdate'])->name('pekerja.account.rekening.update');
     Route::post('/account/submit-verification', [PekerjaStatusController::class, 'submitVerification'])->name('pekerja.account.submit');
 
-    // VERIFIED WORKER
     Route::middleware(['verified.worker'])
         ->prefix('manajemen-jasa')
         ->group(function () {
@@ -180,7 +174,6 @@ Route::middleware(['auth', 'role:pekerja'])
         Route::put('/update/{id}', [JasaController::class, 'update'])->name('pekerja.manajemen-jasa.update');
         Route::delete('/delete/{id}', [JasaController::class, 'destroy'])->name('pekerja.manajemen-jasa.delete');
 
-        // ORDERS
         Route::get('/orders', [OrderController::class, 'workerOrders'])->name('pekerja.orders.index');
         Route::post('/orders/{id}/accept', [OrderController::class, 'workerAccept'])->name('pekerja.orders.accept');
         Route::post('/orders/{id}/reject', [OrderController::class, 'workerReject'])->name('pekerja.orders.reject');
@@ -203,7 +196,7 @@ Route::middleware(['auth', 'role:pekerja'])
 
 /*
 |--------------------------------------------------------------------------
-| TEST NOTIFICATION
+| TEST
 |--------------------------------------------------------------------------
 */
 Route::get('/test', function () {

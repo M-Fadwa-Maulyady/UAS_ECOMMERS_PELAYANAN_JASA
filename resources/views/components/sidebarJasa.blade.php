@@ -23,8 +23,7 @@
         <a href="{{ route('worker.saldo') }}" class="item">
             <i class="fa-solid fa-dollar-sign"></i> Keuangan
         </a>
-
-        <a href="/jasa/laporan" class="item">
+        <a href="{{ route('pekerja.chat') }}" class="item">
             <i class="fa-solid fa-comment"></i> Chat / Komunikasi
         </a>
         <a href="/jasa/pesan" class="item">
