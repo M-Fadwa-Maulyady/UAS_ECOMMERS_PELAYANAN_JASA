@@ -60,7 +60,14 @@
             <li><a href="#pricing-section">Pricing</a></li>
             <li><a href="#contact-section">Contact</a></li>
             <li><a href="#about-section">About</a></li>
-            <li><a href="{{ route('user.orders') }}">📦 Pesanan Saya</a></li>
+            @auth
+                @if(auth()->user()->role === 'user')
+                    <li>
+                        <a href="{{ route('user.orders') }}">📦 Pesanan Saya</a>
+                    </li>
+                @endif
+            @endauth
+
         </ul>
 
         <div class="nav-right">

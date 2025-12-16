@@ -176,11 +176,13 @@
                 @if($worker->is_verified_by_admin == 3)
 
                     {{-- APPROVE BUTTON --}}
-                    <form action="{{ route('admin.pekerja.update-status', $worker->id) }}" method="POST">
+                    <form action="{{ route('admin.pekerja.update', $worker->id) }}" method="POST">
                         @csrf
+                        @method('PUT')
                         <input type="hidden" name="status" value="approved">
                         <button class="btn-approve">Setujui</button>
                     </form>
+
 
                     {{-- REJECT BUTTON --}}
                     <button type="button"
@@ -194,11 +196,13 @@
                 @endif
 
                 {{-- DELETE USER --}}
-                <form action="{{ route('admin.pekerja.delete', $worker->id) }}" method="POST">
-                    @csrf @method('DELETE')
-                    <button onclick="return confirm('Hapus pekerja ini?')" class="btn-delete">Hapus</button>
+                <form action="{{ route('admin.pekerja.destroy', $worker->id) }}" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <button onclick="return confirm('Hapus pekerja ini?')" class="btn-delete">
+                        Hapus
+                    </button>
                 </form>
-
             </div>
         </td>
     </tr>

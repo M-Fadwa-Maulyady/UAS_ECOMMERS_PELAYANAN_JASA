@@ -4,7 +4,7 @@
 
     <h3 class="fw-semibold mb-3">Edit User</h3>
 
-    <form action="{{ route('manajemen-user.update', $user->id) }}" method="POST" class="form-card">
+    <form action="{{ route('admin.manajemen-user.update', $user->id) }}" method="POST" class="form-card">
         @csrf
         @method('PUT')
 
@@ -20,7 +20,7 @@
 
         {{-- ACTION BUTTONS --}}
         <div class="form-actions">
-            <a href="{{ route('manajemen-user.index') }}" class="btn-back">⬅ Kembali</a>
+            <a href="{{ route('admin.manajemen-user.index') }}" class="btn-back">⬅ Kembali</a>
             <button class="btn-update">🔧 Update</button>
         </div>
 

@@ -4,7 +4,7 @@
 
     <h3 class="fw-semibold mb-3">Tambah User</h3>
 
-    <form action="{{ route('manajemen-user.store') }}" method="POST" class="form-card">
+    <form action="{{ route('admin.manajemen-user.store') }}" method="POST" class="form-card">
         @csrf
 
         <div>
@@ -23,7 +23,7 @@
         </div>
 
         <div class="form-actions">
-            <a href="{{ route('manajemen-user.index') }}" class="btn-back">⬅ Kembali</a>
+            <a href="{{ route('admin.manajemen-user.index') }}" class="btn-back">⬅ Kembali</a>
             <button class="btn-submit">💾 Simpan</button>
         </div>
     </form>

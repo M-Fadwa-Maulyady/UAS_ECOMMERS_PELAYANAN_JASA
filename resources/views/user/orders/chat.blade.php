@@ -147,7 +147,7 @@
 
     <!-- INPUT -->
     <form method="POST"
-        action="{{ route('order.chat.send', $order->id) }}"
+        action="{{ route('user.orders.chat.send', $order->id) }}"
         class="chat-input"
         enctype="multipart/form-data">
 

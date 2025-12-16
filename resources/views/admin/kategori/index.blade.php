@@ -4,7 +4,7 @@
 
     <div class="header-section">
         <h3>{{ $title }}</h3>
-        <a href="{{ route('kategori.create') }}" class="btn-kategori-add">+ Tambah Kategori</a>
+        <a href="{{ route('admin.kategori.create') }}" class="btn-kategori-add">+ Tambah Kategori</a>
     </div>
 
     <div class="table-wrapper">
@@ -39,9 +39,9 @@
 
                     <!-- Aksi -->
                     <td class="action-btns">
-                        <a href="{{ route('kategori.edit', $item->id) }}" class="btn-edit">Edit</a>
+                        <a href="{{ route('admin.kategori.edit', $item->id) }}" class="btn-edit">Edit</a>
 
-                        <form action="{{ route('kategori.destroy', $item->id) }}" method="POST" class="d-inline">
+                        <form action="{{ route('admin.kategori.destroy', $item->id) }}" method="POST" class="d-inline">
                             @csrf @method('DELETE')
                             <button class="btn-delete" onclick="return confirm('Hapus kategori ini?')">Hapus</button>
                         </form>

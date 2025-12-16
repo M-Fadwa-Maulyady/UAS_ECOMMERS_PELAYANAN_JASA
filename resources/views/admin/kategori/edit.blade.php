@@ -11,7 +11,7 @@
         <div class="form-card">
             <h3 class="form-title">Edit Kategori</h3>
 
-            <form action="{{ route('kategori.update', $kategori->id) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('admin.kategori.update', $kategori->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
 
@@ -40,7 +40,7 @@
                 </div>
 
                 <div class="form-actions">
-                    <a href="{{ route('kategori.index') }}" class="btn-back">Kembali</a>
+                    <a href="{{ route('admin.kategori.index') }}" class="btn-back">Kembali</a>
                     <button class="btn-update">Update</button>
                 </div>
 
