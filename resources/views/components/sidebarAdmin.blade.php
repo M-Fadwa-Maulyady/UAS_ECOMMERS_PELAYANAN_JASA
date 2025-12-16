@@ -44,14 +44,6 @@
             <i class="fas fa-receipt"></i> Manajemen Transaksi
         </a>
 
-        <a href="#" class="disabled">
-            <i class="fas fa-chart-pie"></i> Laporan & Statistik
-        </a>
-
-        <a href="#" class="disabled">
-            <i class="fas fa-comment-dots"></i> Komplain & Umpan Balik
-        </a>
-
 
     </nav>
 
