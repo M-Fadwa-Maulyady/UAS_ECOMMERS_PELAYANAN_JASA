@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminDashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
@@ -97,9 +98,9 @@ Route::middleware(['auth','role:admin'])
     ->name('admin.')
     ->group(function () {
 
-        Route::get('/dashboard', [DashboardController::class, 'index'])
+        Route::get('/dashboard', [AdminDashboardController::class, 'index'])
             ->name('dashboard');
-
+            
         // MASTER DATA
         Route::resource('manajemen-user', ManajemenUserController::class);
         Route::resource('kategori', KategoriController::class);
@@ -236,6 +237,8 @@ Route::middleware(['auth','role:user'])
         Route::post('/{order}', [RatingController::class, 'store'])
             ->name('store');
 });
+
+
 
 
 
