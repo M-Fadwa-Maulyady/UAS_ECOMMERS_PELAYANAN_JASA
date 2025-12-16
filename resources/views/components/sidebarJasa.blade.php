@@ -1,3 +1,31 @@
+<style>
+    .logout-box {
+    margin-top: 12px;
+}
+
+.logout-btn {
+    width: 100%;
+    background: #ffffff;
+    color: #0E6B50;
+    border: 2px solid #0E6B50;
+    border-radius: 12px;
+    padding: 10px 0;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .25s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.logout-btn:hover {
+    background: #0E6B50;
+    color: #ffffff;
+}
+
+</style>
+
 <aside class="sidebar">
 
     {{-- Brand Header --}}
@@ -79,14 +107,16 @@
             Lihat Detail Status
         </a>
 
-        <div class="pro-box">
-            <form action="{{ route('logout') }}" method="POST" class="logout-form">
+        <div class="logout-box">
+            <form action="{{ route('logout') }}" method="POST">
                 @csrf
-                <button type="submit">
-                    <i class="fas fa-sign-out-alt"></i> Logout
+                <button type="submit" class="logout-btn">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    Logout
                 </button>
             </form>
         </div>
+
 
     </div>
 

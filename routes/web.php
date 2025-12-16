@@ -145,12 +145,11 @@ Route::middleware(['auth','role:pekerja'])
     ->name('pekerja.')
     ->group(function () {
 
-        Route::get('/dashboard', fn () => view('pekerja.dashboard'))
+        Route::get('/dashboard', [DashboardController::class, 'pekerja'])
             ->name('dashboard');
 
         Route::resource('manajemen-jasa', JasaController::class);
 
-        // ORDER
         Route::get('/orders', [OrderController::class, 'workerOrders'])
             ->name('orders.index');
 
@@ -160,11 +159,9 @@ Route::middleware(['auth','role:pekerja'])
         Route::post('/orders/{id}/reject', [OrderController::class, 'rejectWorker'])
             ->name('orders.reject');
 
-        // STATUS
         Route::get('/account/status', [PekerjaStatusController::class, 'index'])
             ->name('account.status');
 
-        // CHAT
         Route::get('/chat', [OrderController::class, 'workerChatList'])
             ->name('chat');
 
@@ -173,7 +170,11 @@ Route::middleware(['auth','role:pekerja'])
 
         Route::post('/chat/{order}/send', [OrderController::class, 'sendChat'])
             ->name('chat.send');
+
+        Route::get('/ratings', [RatingController::class, 'workerIndex'])
+            ->name('ratings');
 });
+
 
 
 /*
@@ -222,15 +223,6 @@ Route::middleware(['auth','role:pekerja'])
 });
 
 
-Route::middleware(['auth','role:pekerja'])
-    ->prefix('pekerja')
-    ->name('pekerja.')
-    ->group(function () {
-
-        Route::get('/ratings', [RatingController::class, 'workerIndex'])
-            ->name('ratings');
-});
-
 
 
 Route::middleware(['auth','role:user'])
@@ -244,6 +236,8 @@ Route::middleware(['auth','role:user'])
         Route::post('/{order}', [RatingController::class, 'store'])
             ->name('store');
 });
+
+
 
 
 
