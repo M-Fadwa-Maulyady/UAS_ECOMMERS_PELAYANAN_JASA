@@ -1,184 +1,103 @@
-<x-layoutJasa>
-<!-- Topbar -->
-      <!-- Content -->
-      <section class="grid">
-        <!-- Stats -->
-        <div class="stats-row">
-          <div class="stat card"><div class="pill">Order Selesai</div><div class="stat-val">59</div></div>
-          <div class="stat card"><div class="pill">Jam Kerja (minggu ini)</div><div class="stat-val">72 h</div></div>
-          <div class="stat card"><div class="pill">Rating Saya</div><div class="stat-val">4.8</div></div>
-          <div class="stat card"><div class="pill">Jasa Aktif</div><div class="stat-val">6</div></div>
-        </div>
+<x-layoutJasa title="Dashboard">
 
-        <!-- Vacancy Chart -->
-        <div class="card vacancy">
-          <div class="card-head">
-            <h3>Vacancy Stats</h3>
-            <div class="legend">
-              <span><i class="dot blue"></i> Application Sent</span>
-              <span><i class="dot green"></i> Interviews</span>
-              <span><i class="dot pink"></i> Rejected</span>
+<style>
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 18px;
+    margin-bottom: 28px;
+}
+.kpi-card {
+    background: white;
+    border-radius: 16px;
+    padding: 18px;
+    box-shadow: 0 6px 20px rgba(0,0,0,.06);
+}
+.kpi-title {
+    font-size: 13px;
+    color: #6c757d;
+}
+.kpi-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: #0E6B50;
+}
+.table-card {
+    background: white;
+    border-radius: 16px;
+    padding: 22px;
+    box-shadow: 0 6px 20px rgba(0,0,0,.06);
+}
+</style>
 
-              <!-- Dropdown -->
-              <div class="dropdown">
-                <button class="btn-mini" id="rangeBtn">This Month <i class="fa-solid fa-chevron-down"></i></button>
-                <div class="dropdown-menu" id="rangeMenu">
-                  <div data-range="week">This Week</div>
-                  <div data-range="month">This Month</div>
-                  <div data-range="year">This Year</div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <canvas id="vacancyChart"></canvas>
-        </div>
+<h3 class="mb-3">👋 Halo, {{ auth()->user()->name }}</h3>
 
-        <!-- Yearly Progress -->
-        <div class="yearly card">
-          <div class="card-head"><h3>Progress Tahunan</h3></div>
-          <div class="ring-wrap">
-            <canvas id="yearlyRing" width="220" height="220"></canvas>
-            <div class="ring-center">
-              <div class="ring-num" id="yearlyNum">63%</div>
-              <div class="muted small">Main Goals</div>
-            </div>
-          </div>
-          <ul class="ring-legend">
-            <li><i class="dot green"></i> Pekerjaan</li>
-            <li><i class="dot blue"></i> Belajar</li>
-            <li><i class="dot pink"></i> Desain UI</li>
-            <li><i class="dot mint"></i> Membaca</li>
-          </ul>
-        </div>
+{{-- KPI --}}
+<div class="kpi-grid">
+    <div class="kpi-card">
+        <div class="kpi-title">Order Baru</div>
+        <div class="kpi-value">{{ $orderBaru }}</div>
+    </div>
 
-        <!-- Tasks -->
-        <div class="task card">
-          <div class="card-head"><h3>Tugas Harian</h3><button class="link">Detail</button></div>
-          <ul class="checklist" id="dailyTask"></ul>
-          <div class="task-footer">
-            <input id="newDaily" type="text" placeholder="Tambah tugas…">
-            <button class="icon-btn" id="addDaily"><i class="fa-solid fa-plus"></i></button>
-          </div>
-        </div>
+    <div class="kpi-card">
+        <div class="kpi-title">Order Aktif</div>
+        <div class="kpi-value">{{ $orderAktif }}</div>
+    </div>
 
-        <div class="task card">
-          <div class="card-head"><h3>Tugas Mingguan</h3><button class="link">Detail</button></div>
-          <ul class="checklist" id="weeklyTask"></ul>
-          <div class="task-footer">
-            <input id="newWeekly" type="text" placeholder="Tambah tugas…">
-            <button class="icon-btn" id="addWeekly"><i class="fa-solid fa-plus"></i></button>
-          </div>
-        </div>
+    <div class="kpi-card">
+        <div class="kpi-title">Order Selesai</div>
+        <div class="kpi-value">{{ $orderSelesai }}</div>
+    </div>
 
-        <!-- In Progress -->
-        <div class="inprogress card">
-          <div class="card-head"><h3>In Progress</h3><button class="link">View all</button></div>
-          <div class="progress-list" id="progressList"></div>
-          <button class="btn-primary" id="btnNewProject"><i class="fa-solid fa-plus"></i> Buat Proyek Baru</button>
-        </div>
-      </section>
-    <main class="main">
-      <!-- Topbar -->
-      <header class="topbar">
-        <div class="search">
-          <i class="fa-solid fa-magnifying-glass"></i>
-          <input type="text" placeholder="Cari proyek, klien, file…">
-        </div>
+    <div class="kpi-card">
+        <div class="kpi-title">Saldo</div>
+        <div class="kpi-value">Rp {{ number_format($saldo,0,',','.') }}</div>
+    </div>
 
-        <div class="top-actions">
-          <div class="locale">
-            <img src="https://flagcdn.com/w20/id.png" alt="ID">
-            <span>Ind (ID)</span>
-            <i class="fa-solid fa-chevron-down"></i>
-          </div>
-          <button class="icon-btn"><i class="fa-regular fa-bell"></i></button>
-          <div class="profile">
-            <img src="https://i.pravatar.cc/100?img=15" alt="avatar">
-            <div class="info">
-              <strong>Rafli Saputra</strong>
-              <span class="muted">Freelance Designer</span>
-            </div>
-          </div>
-        </div>
-      </header>
+    <div class="kpi-card">
+        <div class="kpi-title">Rating</div>
+        <div class="kpi-value">⭐ {{ number_format($rating ?? 0,1) }}</div>
+    </div>
+</div>
 
-      <!-- Content -->
-      <section class="grid">
-        <!-- Stats -->
-        <div class="stats-row">
-          <div class="stat card"><div class="pill">Order Selesai</div><div class="stat-val">59</div></div>
-          <div class="stat card"><div class="pill">Jam Kerja (minggu ini)</div><div class="stat-val">72 h</div></div>
-          <div class="stat card"><div class="pill">Rating Saya</div><div class="stat-val">4.8</div></div>
-          <div class="stat card"><div class="pill">Jasa Aktif</div><div class="stat-val">6</div></div>
-        </div>
+{{-- ORDER TERBARU --}}
+<div class="table-card">
+    <h5 class="mb-3">📦 Order Terbaru</h5>
 
-        <!-- Vacancy Chart -->
-        <div class="card vacancy">
-          <div class="card-head">
-            <h3>Vacancy Stats</h3>
-            <div class="legend">
-              <span><i class="dot blue"></i> Application Sent</span>
-              <span><i class="dot green"></i> Interviews</span>
-              <span><i class="dot pink"></i> Rejected</span>
+    <table class="table align-middle">
+        <thead>
+            <tr>
+                <th>Jasa</th>
+                <th>Klien</th>
+                <th>Status</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+        @forelse($orders as $order)
+            <tr>
+                <td>{{ $order->jasa->nama_jasa }}</td>
+                <td>{{ $order->user->name }}</td>
+                <td>
+                    <span class="badge bg-success">
+                        {{ str_replace('_',' ', $order->status) }}
+                    </span>
+                </td>
+                <td>
+                    <a href="{{ route('pekerja.orders.index') }}" class="btn btn-sm btn-outline-success">
+                        Lihat
+                    </a>
+                </td>
+            </tr>
+        @empty
+            <tr>
+                <td colspan="4" class="text-center text-muted">
+                    Belum ada order
+                </td>
+            </tr>
+        @endforelse
+        </tbody>
+    </table>
+</div>
 
-              <!-- Dropdown -->
-              <div class="dropdown">
-                <button class="btn-mini" id="rangeBtn">This Month <i class="fa-solid fa-chevron-down"></i></button>
-                <div class="dropdown-menu" id="rangeMenu">
-                  <div data-range="week">This Week</div>
-                  <div data-range="month">This Month</div>
-                  <div data-range="year">This Year</div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <canvas id="vacancyChart"></canvas>
-        </div>
-
-        <!-- Yearly Progress -->
-        <div class="yearly card">
-          <div class="card-head"><h3>Progress Tahunan</h3></div>
-          <div class="ring-wrap">
-            <canvas id="yearlyRing" width="220" height="220"></canvas>
-            <div class="ring-center">
-              <div class="ring-num" id="yearlyNum">63%</div>
-              <div class="muted small">Main Goals</div>
-            </div>
-          </div>
-          <ul class="ring-legend">
-            <li><i class="dot green"></i> Pekerjaan</li>
-            <li><i class="dot blue"></i> Belajar</li>
-            <li><i class="dot pink"></i> Desain UI</li>
-            <li><i class="dot mint"></i> Membaca</li>
-          </ul>
-        </div>
-
-        <!-- Tasks -->
-        <div class="task card">
-          <div class="card-head"><h3>Tugas Harian</h3><button class="link">Detail</button></div>
-          <ul class="checklist" id="dailyTask"></ul>
-          <div class="task-footer">
-            <input id="newDaily" type="text" placeholder="Tambah tugas…">
-            <button class="icon-btn" id="addDaily"><i class="fa-solid fa-plus"></i></button>
-          </div>
-        </div>
-
-        <div class="task card">
-          <div class="card-head"><h3>Tugas Mingguan</h3><button class="link">Detail</button></div>
-          <ul class="checklist" id="weeklyTask"></ul>
-          <div class="task-footer">
-            <input id="newWeekly" type="text" placeholder="Tambah tugas…">
-            <button class="icon-btn" id="addWeekly"><i class="fa-solid fa-plus"></i></button>
-          </div>
-        </div>
-
-        <!-- In Progress -->
-        <div class="inprogress card">
-          <div class="card-head"><h3>In Progress</h3><button class="link">View all</button></div>
-          <div class="progress-list" id="progressList"></div>
-          <button class="btn-primary" id="btnNewProject"><i class="fa-solid fa-plus"></i> Buat Proyek Baru</button>
-        </div>
-      </section>
-    </main>
-    <!-- End Main -->
 </x-layoutJasa>
