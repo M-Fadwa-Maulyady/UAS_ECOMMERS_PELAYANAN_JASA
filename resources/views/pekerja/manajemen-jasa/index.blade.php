@@ -189,16 +189,16 @@
                                 ✏ Edit
                             </a>
 
-                            <form action="{{ route('pekerja.manajemen-jasa.delete', $j->id) }}"
-                                  method="POST">
+                            <form action="{{ route('pekerja.manajemen-jasa.destroy', $j->id) }}"
+                                method="POST"
+                                onsubmit="return confirm('Yakin hapus jasa ini?')">
                                 @csrf
                                 @method('DELETE')
-
-                                <button onclick="return confirm('Hapus jasa ini?')"
-                                        class="btn-delete">
-                                    🗑 Hapus
+                                <button type="submit" class="btn-delete">
+                                    Hapus
                                 </button>
                             </form>
+
 
                         </div>
                     </td>

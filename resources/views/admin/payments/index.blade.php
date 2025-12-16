@@ -99,7 +99,7 @@
                                 <button class="btn btn-success btn-sm">Approve</button>
                             </form>
                         @elseif($p->status === 'paid')
-                            <form action="{{ route('admin.payments.send', $p->id) }}" method="POST" class="mt-1">
+                            <form action="{{ route('admin.payments.sendWorker', $p->id) }}" method="POST" class="mt-1">
                                 @csrf
                                 <button class="btn btn-warning btn-sm">Kirim ke Pekerja</button>
                             </form>

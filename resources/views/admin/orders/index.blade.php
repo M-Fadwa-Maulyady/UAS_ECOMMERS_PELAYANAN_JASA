@@ -158,14 +158,14 @@
                     @if($order->status === 'pending_admin')
                         <div class="action-wrapper">
 
-                            <form action="{{ route('admin.order.approve', $order->id) }}" method="POST">
+                            <form action="{{ route('admin.orders.approve', $order->id) }}" method="POST">
                                 @csrf
                                 <button type="submit" class="btn-action btn-approve">
                                     ✔ Approve
                                 </button>
                             </form>
 
-                            <form action="{{ route('admin.order.reject', $order->id) }}" method="POST">
+                            <form action="{{ route('admin.orders.reject', $order->id) }}" method="POST">
                                 @csrf
                                 <button type="submit" class="btn-action btn-reject">
                                     ✖ Reject

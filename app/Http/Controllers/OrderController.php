@@ -53,6 +53,36 @@ class OrderController extends Controller
         ]);
     }
 
+    // ===============================
+// WORKER ACTION
+// ===============================
+    public function accept($id)
+    {
+        $order = Order::where('worker_id', auth()->id())
+            ->where('status', Order::STATUS_WAITING_WORKER)
+            ->findOrFail($id);
+
+        $order->update([
+            'status' => Order::STATUS_WAITING_PAYMENT
+        ]);
+
+        return back()->with('success', 'Pesanan diterima.');
+    }
+
+    public function rejectWorker($id)
+    {
+        $order = Order::where('worker_id', auth()->id())
+            ->where('status', Order::STATUS_WAITING_WORKER)
+            ->findOrFail($id);
+
+        $order->update([
+            'status' => Order::STATUS_REJECTED_WORKER
+        ]);
+
+        return back()->with('success', 'Pesanan ditolak.');
+    }
+
+
     public function workerChatList()
     {
         $orders = Order::where('worker_id', auth()->id())
@@ -85,9 +115,13 @@ class OrderController extends Controller
     // ===============================
     public function userOrders()
     {
-        return view('user.orders.index', [
-            'orders' => Order::where('user_id',auth()->id())->get()
-        ]);
+       $orders = Order::with(['jasa', 'rating'])
+        ->where('user_id', auth()->id())
+        ->latest()
+        ->get();
+
+    return view('user.orders.index', compact('orders'));
+
     }
 
     public function chat($id)

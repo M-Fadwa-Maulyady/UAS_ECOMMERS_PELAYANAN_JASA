@@ -11,7 +11,7 @@
         <div class="form-card">
             <h3 class="form-title">Tambah Kategori</h3>
 
-            <form action="{{ route('kategori.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('admin.kategori.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
                 <div class="form-group">
@@ -25,7 +25,7 @@
                 </div>
 
                 <div class="form-actions">
-                    <a href="{{ route('kategori.index') }}" class="btn-back">Kembali</a>
+                    <a href="{{ route('admin.kategori.index') }}" class="btn-back">Kembali</a>
                     <button class="btn-save">Simpan</button>
                 </div>
             </form>

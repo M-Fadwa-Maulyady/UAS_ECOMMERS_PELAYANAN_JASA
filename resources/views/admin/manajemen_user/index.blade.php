@@ -6,7 +6,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h3 class="fw-semibold m-0">Manajemen User</h3>
 
-        <a href="{{ route('manajemen-user.create') }}" class="btn-add-user">
+        <a href="{{ route('admin.manajemen-user.create') }}" class="btn-add-user">
             + Tambah User
         </a>
     </div>
@@ -32,11 +32,11 @@
                         <td>{{ $user->email }}</td>
                         <td class="d-flex gap-2">
 
-                            <a href="{{ route('manajemen-user.edit', $user->id) }}" class="btn-edit">
+                            <a href="{{ route('admin.manajemen-user.edit', $user->id) }}" class="btn-edit">
                                 ✏ Edit
                             </a>
 
-                            <form action="{{ route('manajemen-user.destroy', $user->id) }}" method="POST" class="d-inline">
+                            <form action="{{ route('admin.manajemen-user.destroy', $user->id) }}" method="POST" class="d-inline">
                                 @csrf
                                 @method('DELETE')
                                 <button onclick="return confirm('Hapus user ini?')" class="btn-delete">

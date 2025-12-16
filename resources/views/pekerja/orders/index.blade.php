@@ -39,7 +39,7 @@
                         </span>
                     </td>
 
-                    {{-- Jika sudah ada bukti --}}
+                    {{-- Bukti --}}
                     <td>
                         @if($order->bukti_pengerjaan)
                             <img src="{{ asset('uploads/bukti/'.$order->bukti_pengerjaan) }}"
@@ -51,43 +51,32 @@
 
                     {{-- Aksi --}}
                     <td>
-                        @if($section['title'] === 'Menunggu Persetujuan')
-                            <form method="POST" action="{{ route('pekerja.orders.accept',$order->id) }}">
-                                @csrf
-                                <button class="btn-green btn-sm">✔ Terima</button>
-                            </form>
-
-                            <form method="POST" action="{{ route('pekerja.orders.reject',$order->id) }}" class="mt-1">
-                                @csrf
-                                <button class="btn-red btn-sm">✖ Tolak</button>
-                            </form>
-
-                        @elseif($section['title'] === 'Sedang Dikerjakan')
-
-                            {{-- BUTTON MODAL UPLOAD --}}
-                            <button class="btn-green btn-sm" data-bs-toggle="modal"
-                                data-bs-target="#modalUpload-{{ $order->id }}">
-                                📤 Upload & Selesai
+                    @if($order->status === 'waiting_worker')
+                        <form method="POST" action="{{ route('pekerja.orders.accept', $order->id) }}">
+                            @csrf
+                            <button class="btn-green btn-sm w-100 mb-1">
+                                ✔ Terima
                             </button>
+                        </form>
 
-                            {{-- MODAL --}}
-                            <div class="modal fade" id="modalUpload-{{ $order->id }}">
-                              <div class="modal-dialog modal-dialog-centered">
-                                <form method="POST" enctype="multipart/form-data"
-                                      action="{{ route('pekerja.orders.finish',$order->id) }}">
-                                  @csrf
-                                  <div class="modal-content p-3">
-                                    <h5 class="fw-bold">Upload Bukti Pekerjaan</h5>
-                                    <input required type="file" name="bukti_pengerjaan"
-                                           class="form-control mt-2" accept="image/*">
-                                    <button class="btn-green w-100 mt-3">✔ Kirim & Selesaikan</button>
-                                  </div>
-                                </form>
-                              </div>
-                            </div>
+                        <form method="POST" action="{{ route('pekerja.orders.reject', $order->id) }}">
+                            @csrf
+                            <button class="btn-red btn-sm w-100">
+                                ✖ Tolak
+                            </button>
+                        </form>
 
-                        @endif
-                    </td>
+                    @elseif($order->status === 'waiting_payment')
+                        <span class="text-muted">Sedang dikerjakan</span>
+
+                    @elseif($order->status === 'finished')
+                        <span class="text-success">✔ Selesai</span>
+
+                    @else
+                        <span class="text-muted">-</span>
+                    @endif
+                </td>
+
                 </tr>
                 @endforeach
             </tbody>
@@ -100,4 +89,5 @@
 
 </div>
 @endforeach
+
 </x-layoutJasa>
