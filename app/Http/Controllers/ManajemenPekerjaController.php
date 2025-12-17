@@ -58,4 +58,10 @@ class ManajemenPekerjaController extends Controller
 
         return back()->with('success', 'Pekerja berhasil dihapus.');
     }
+
+    public function update(Request $request, $id)
+    {
+        return $this->updateStatus($request, $id);
+    }
+
 }

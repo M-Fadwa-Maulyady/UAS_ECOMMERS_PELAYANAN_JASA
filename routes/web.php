@@ -126,13 +126,21 @@ Route::middleware(['auth','role:admin'])
             ->name('orders.reject');
 
        Route::get('/payments', [PaymentController::class, 'index'])
-    ->name('payments');
+             ->name('payments');
 
         Route::post('/payments/{payment}/approve', [PaymentController::class, 'approve'])
             ->name('payments.approve');
 
         Route::post('/payments/{payment}/send-worker', [PaymentController::class, 'sendToWorker'])
             ->name('payments.sendWorker');
+        Route::post('/jasa/{id}/approve', [JasaController::class, 'approve'])
+            ->name('jasa.approve');
+
+        Route::post('/jasa/{id}/reject', [JasaController::class, 'reject'])
+            ->name('jasa.reject');
+
+            
+
 
 });
 
@@ -174,6 +182,35 @@ Route::middleware(['auth','role:pekerja'])
 
         Route::get('/ratings', [RatingController::class, 'workerIndex'])
             ->name('ratings');
+
+        // STATUS
+        Route::get('/account/status', [PekerjaStatusController::class, 'index'])
+            ->name('account.status');
+
+        // KTP
+        Route::get('/account/ktp', [PekerjaStatusController::class, 'ktpForm'])
+            ->name('account.ktp');
+
+        Route::post('/account/ktp', [PekerjaStatusController::class, 'ktpUpload'])
+            ->name('account.ktp.upload');
+
+        // PROFIL
+        Route::get('/account/profile', [PekerjaStatusController::class, 'profileForm'])
+            ->name('account.profile');
+
+        Route::post('/account/profile', [PekerjaStatusController::class, 'profileUpdate'])
+            ->name('account.profile.update');
+
+        // REKENING
+        Route::get('/account/rekening', [PekerjaStatusController::class, 'rekeningForm'])
+            ->name('account.rekening');
+
+        Route::post('/account/rekening', [PekerjaStatusController::class, 'rekeningUpdate'])
+            ->name('account.rekening.update');
+
+        // SUBMIT VERIFIKASI
+        Route::post('/account/submit', [PekerjaStatusController::class, 'submitVerification'])
+            ->name('account.submit');
 });
 
 
