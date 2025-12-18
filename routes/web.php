@@ -21,7 +21,11 @@ use App\Http\Controllers\RatingController;
 | PUBLIC
 |--------------------------------------------------------------------------
 */
-Route::get('/', [LandingController::class, 'index'])->name('landing');
+// Route::get('/', [LandingController::class, 'index'])->name('landing');
+Route::get('/', function () {
+    return 'RAILWAY OK – UAS FADWA';
+});
+
 Route::get('/jasa/{slug}', [LandingController::class, 'show'])->name('jasa.show');
 
 /*
