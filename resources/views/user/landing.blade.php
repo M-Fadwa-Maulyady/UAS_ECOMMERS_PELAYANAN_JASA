@@ -221,28 +221,28 @@
 
             <div class="pro-service-grid">
                 <div class="pro-card">
-                    <img src="img/homeservice.png" alt="Home Shifting">
+                    <img src="{{ asset("jasa-barang2/img/Home Shifting.jpg") }}" alt="Home Shifting">
                     <h3>Home Shifting</h3>
                     <p>Hassle-free moving experience for your home.</p>
                     <a href="#" class="btn-explore">Explore Now <i class="fa fa-arrow-right"></i></a>
                 </div>
 
                 <div class="pro-card">
-                    <img src="img/office.png" alt="Office Relocation">
+                    <img src="{{ asset("jasa-barang2/img/Office Relocation.jpg") }}" alt="Office Relocation">
                     <h3>Office Relocation</h3>
                     <p>Reduce downtime with fast relocation services.</p>
                     <a href="#" class="btn-explore">Explore Now <i class="fa fa-arrow-right"></i></a>
                 </div>
 
                 <div class="pro-card">
-                    <img src="img/packing.png" alt="Packing & Unpacking">
+                    <img src="{{ asset("jasa-barang2/img/Packing & Unpacking.jpg") }}" alt="Packing & Unpacking">
                     <h3>Packing & Unpacking</h3>
                     <p>Let us handle packing while you relax.</p>
                     <a href="#" class="btn-explore">Explore Now <i class="fa fa-arrow-right"></i></a>
                 </div>
 
                 <div class="pro-card">
-                    <img src="img/longmove.png" alt="Long-Distance Moving">
+                    <img src="{{ asset(jasa-barang2/img/Long-Distance Moving.jpg) }}" alt="Long-Distance Moving">
                     <h3>Long-Distance Moving</h3>
                     <p>Move between cities safely and easily.</p>
                     <a href="#" class="btn-explore">Explore Now <i class="fa fa-arrow-right"></i></a>
